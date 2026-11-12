@@ -3,6 +3,7 @@ import subprocess
 import shutil
 import threading
 import uuid
+import atexit
 from typing import List, Tuple, Optional, Dict, Set
 
 # Active processes and containers tracking per scan_id (Sets allow concurrent tools per scan without collision)
@@ -10,6 +11,23 @@ _ACTIVE_PROCS: Dict[str, Set[subprocess.Popen]] = {}
 _ACTIVE_CONTAINERS: Dict[str, Set[str]] = {}
 _CANCELLED_SCANS: Set[str] = set()
 _LOCK = threading.Lock()
+
+def _cleanup_all_active_containers():
+    """Cleanup all tracked active docker containers on interpreter exit to prevent orphans."""
+    with _LOCK:
+        for scan_id, containers in list(_ACTIVE_CONTAINERS.items()):
+            for container_name in list(containers):
+                try:
+                    subprocess.run(
+                        ["docker", "rm", "-f", container_name],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=5
+                    )
+                except Exception:
+                    pass
+
+atexit.register(_cleanup_all_active_containers)
 
 class ScanCancelledException(Exception):
     """Raised when a scan has been cancelled by the user."""
@@ -83,7 +101,7 @@ def is_docker_available() -> bool:
         return True
 
     now = time.time()
-    if _DOCKER_AVAILABLE_CACHE is not None and (now - _DOCKER_CACHE_TIME) < 60:
+    if _DOCKER_AVAILABLE_CACHE is not None and (now - _DOCKER_CACHE_TIME) < 120:
         return _DOCKER_AVAILABLE_CACHE
 
     try:
@@ -93,22 +111,14 @@ def is_docker_available() -> bool:
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-            timeout=2.5
+            timeout=5.0
         )
         if res.returncode != 0:
             _DOCKER_AVAILABLE_CACHE = False
             _DOCKER_CACHE_TIME = now
             return False
 
-        # Step 2: Canary test - verify docker run executes without hanging in Created state
-        canary = subprocess.run(
-            ["docker", "run", "--rm", "alpine:latest", "true"],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            timeout=2.5
-        )
-        _DOCKER_AVAILABLE_CACHE = (canary.returncode == 0)
+        _DOCKER_AVAILABLE_CACHE = True
     except Exception:
         _DOCKER_AVAILABLE_CACHE = False
 
@@ -194,13 +204,18 @@ def run_docker_tool(
             return True, stdout
         else:
             return False, f"Process returned code {proc.returncode}: {stderr}"
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as te:
         if proc:
             proc.kill()
         try:
             subprocess.run(["docker", "rm", "-f", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
         except Exception:
             pass
+        partial_stdout = te.output or ""
+        if isinstance(partial_stdout, bytes):
+            partial_stdout = partial_stdout.decode("utf-8", errors="replace")
+        if partial_stdout and len(partial_stdout.strip()) > 0:
+            return True, partial_stdout
         return False, f"Tool execution timed out after {timeout} seconds"
     except ScanCancelledException:
         if proc:

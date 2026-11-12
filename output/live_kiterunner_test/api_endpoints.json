@@ -1,0 +1,11 @@
+[
+  {
+    "url": "https://academy.hackthebox.com/api/health",
+    "origin": "https://academy.hackthebox.com",
+    "method": "GET",
+    "path": "/api/health",
+    "status_code": 403,
+    "content_length": 39182,
+    "source": "kiterunner"
+  }
+]

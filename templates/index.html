@@ -1436,8 +1436,22 @@
                     data.scans.forEach(s => {
                         const opt = document.createElement('option');
                         opt.value = s.scan_id;
-                        const statusIcon = s.is_completed ? '✅' : (s.current_stage === 'stopped' ? '🛑' : '⏳');
-                        const stageText = s.is_completed ? 'مكتمل' : (s.current_stage === 'stopped' ? 'متوقف' : 'قيد الفحص');
+                        const sVal = s.status || s.current_stage || '';
+                        let statusIcon = '⏳';
+                        let stageText = 'قيد الفحص';
+                        if (sVal === 'stopped' || s.current_stage === 'stopped') {
+                            statusIcon = '🛑';
+                            stageText = 'متوقف';
+                        } else if (sVal === 'failed' || (s.has_error && !s.is_completed)) {
+                            statusIcon = '❌';
+                            stageText = 'فاشل';
+                        } else if (sVal === 'partial' || (s.has_error && s.is_completed)) {
+                            statusIcon = '⚠️';
+                            stageText = 'جزئي';
+                        } else if (s.is_completed && !s.has_error) {
+                            statusIcon = '✅';
+                            stageText = 'مكتمل';
+                        }
                         opt.textContent = `${statusIcon} ${s.target_domain} (${stageText} ${s.progress}%) [${s.scan_id.slice(-6)}]`;
                         select.appendChild(opt);
                     });
@@ -1637,15 +1651,19 @@
                     document.getElementById('progressBarFill').style.width = `${d.progress_percentage}%`;
                     
                     const statusText = document.getElementById('currentStatusText');
-                    if (d.current_stage === 'stopped') {
+                    const sVal = d.status || d.current_stage || '';
+                    if (sVal === 'stopped' || d.current_stage === 'stopped') {
                         statusText.textContent = `🛑 متوقف: ${d.logs[d.logs.length - 1] || 'تم إيقاف الفحص بواسطة المستخدم.'}`;
                         statusText.style.color = '#f87171';
-                    } else if (d.is_completed) {
+                    } else if (sVal === 'failed' || (d.has_error && !d.is_completed)) {
+                        statusText.textContent = `❌ فشل الفحص: ${d.error_message || d.logs[d.logs.length - 1] || 'فشلت أدوات الفحص أثناء التنفيذ.'}`;
+                        statusText.style.color = '#ef4444';
+                    } else if (sVal === 'partial' || (d.has_error && d.is_completed)) {
+                        statusText.textContent = `⚠️ اكتمل الفحص جزئياً: تعذر إكمال بعض المراحل أو الأدوات (${d.logs[d.logs.length - 1] || ''})`;
+                        statusText.style.color = '#f59e0b';
+                    } else if (d.is_completed && !d.has_error) {
                         statusText.textContent = `✅ اكتمل الفحص الأمني الشامل بنجاح (100%)`;
                         statusText.style.color = '#34d399';
-                    } else if (d.has_error) {
-                        statusText.textContent = `⚠️ خطأ: ${d.error_message || 'حدث خطأ غير متوقع'}`;
-                        statusText.style.color = '#f87171';
                     } else {
                         statusText.textContent = `الأداة النشطة: [${(d.current_tool || '').toUpperCase()}] - ${d.logs[d.logs.length - 1] || ''}`;
                         statusText.style.color = '';
@@ -1664,7 +1682,7 @@
                     logsBox.scrollTop = logsBox.scrollHeight;
 
                     // If completed, stopped, or error, stop polling and fetch full results
-                    const isRunning = !d.is_completed && !d.has_error && d.current_stage !== 'stopped';
+                    const isRunning = !d.is_completed && !d.has_error && d.current_stage !== 'stopped' && sVal !== 'stopped' && sVal !== 'failed' && sVal !== 'partial';
                     if (!isRunning) {
                         if (pollTimer) clearInterval(pollTimer);
                         setScanRunningUI(false);

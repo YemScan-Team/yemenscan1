@@ -96,22 +96,39 @@ def get_host_priority(h: str, target_domain: str) -> Tuple[int, str]:
         return (3, clean_h)
 
 
-def prioritize_hosts(hosts: List[str], target_domain: str) -> List[str]:
-    """Sorts subdomains list placing root domain at index 0, followed by www."""
+def prioritize_hosts(hosts: List[str], target_domain: str, include_root: bool = True) -> List[str]:
+    """
+    Sorts hostnames/subdomains list.
+    If include_root is True (default for backward compatibility with general target lists),
+    places root domain at index 0, followed by www.{target_domain}, then other subdomains.
+    If include_root is False (explicitly passed by Subfinder stage and discovery endpoints),
+    the root domain is strictly excluded from the returned subdomains list.
+    """
+    clean_dom = target_domain.strip().lower() if target_domain else ""
+    if "://" in clean_dom:
+        clean_dom = clean_dom.split("://", 1)[1]
+    clean_dom = clean_dom.split("/", 1)[0].split(":", 1)[0].rstrip(".")
+
     if not hosts:
-        clean_dom = target_domain.strip().lower() if target_domain else ""
-        return [clean_dom] if clean_dom else []
+        if include_root and clean_dom:
+            return [clean_dom]
+        return []
 
     seen = set()
     unique_hosts = []
     for h in hosts:
-        if h and h.strip() and h.strip().lower() not in seen:
-            seen.add(h.strip().lower())
-            unique_hosts.append(h.strip())
+        if not h or not isinstance(h, str):
+            continue
+        h_clean = h.strip().lower().rstrip(".")
+        if not h_clean:
+            continue
+        if not include_root and clean_dom and h_clean == clean_dom:
+            continue
+        if h_clean not in seen:
+            seen.add(h_clean)
+            unique_hosts.append(h_clean)
 
-    # Ensure target_domain is present
-    clean_dom = target_domain.strip() if target_domain else ""
-    if clean_dom and clean_dom.lower() not in seen:
+    if include_root and clean_dom and clean_dom not in seen:
         unique_hosts.insert(0, clean_dom)
 
     return sorted(unique_hosts, key=lambda h: get_host_priority(h, target_domain))

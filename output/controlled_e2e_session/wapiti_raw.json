@@ -1,0 +1,212 @@
+{
+  "vulnerabilities": {
+    "Backup file": [],
+    "Cleartext Submission of Password": [
+      {
+        "method": "GET",
+        "path": "/login",
+        "info": "Password field password sent in clear text from URL http://host.docker.internal:8888/login",
+        "level": 3,
+        "parameter": "password",
+        "referer": "",
+        "module": "unsecure_password",
+        "http_request": "GET /login HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/login\"",
+        "wstg": [
+          "WSTG-CONF-07"
+        ]
+      }
+    ],
+    "Weak credentials": [],
+    "CRLF Injection": [],
+    "Content Security Policy Configuration": [
+      {
+        "method": "GET",
+        "path": "/",
+        "info": "CSP is not set for URL: http://host.docker.internal:8888/",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "csp",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "wstg": [
+          "WSTG-CONF-12",
+          "OSHP-Content-Security-Policy"
+        ]
+      }
+    ],
+    "Cross Site Request Forgery": [],
+    "CVE-2024-55591": [],
+    "Potentially dangerous file": [],
+    "Command execution": [],
+    "Path Traversal": [],
+    "Fingerprint web application framework": [],
+    "Fingerprint web server": [],
+    "Htaccess Bypass": [],
+    "HTML Injection": [],
+    "Clickjacking Protection": [
+      {
+        "method": "GET",
+        "path": "/",
+        "info": "X-Frame-Options is not set",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "http_headers",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "wstg": [
+          "OSHP-X-Frame-Options"
+        ]
+      }
+    ],
+    "HTTP Strict Transport Security (HSTS)": [],
+    "MIME Type Confusion": [
+      {
+        "method": "GET",
+        "path": "/",
+        "info": "X-Content-Type-Options is not set",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "http_headers",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "wstg": [
+          "OSHP-X-Content-Type-Options"
+        ]
+      }
+    ],
+    "HttpOnly Flag cookie": [
+      {
+        "method": "GET",
+        "path": "/",
+        "info": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "cookieflags",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "wstg": [
+          "WSTG-SESS-02"
+        ]
+      }
+    ],
+    "Unencrypted Channels": [
+      {
+        "method": "GET",
+        "path": "/",
+        "info": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS.",
+        "level": 2,
+        "parameter": null,
+        "referer": "",
+        "module": "https_redirect",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "wstg": [
+          "WSTG-CRYP-03"
+        ]
+      },
+      {
+        "method": "GET",
+        "path": "/redirect",
+        "info": "No HTTPS redirection for this host. All HTTP requests are served in clear text.",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "https_redirect",
+        "http_request": "GET /redirect HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/redirect\"",
+        "wstg": [
+          "WSTG-CRYP-03"
+        ]
+      }
+    ],
+    "Inconsistent Redirection": [],
+    "Information Disclosure - Full Path": [
+      {
+        "method": "GET",
+        "path": "/debug/err",
+        "info": "Response contains potential system path: /var/app/controller.py",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "information_disclosure",
+        "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+        "wstg": [
+          "WSTG-ERRH-01"
+        ]
+      }
+    ],
+    "LDAP Injection": [],
+    "Log4Shell": [],
+    "NS takeover": [],
+    "Open Redirect": [],
+    "Reflected Cross Site Scripting": [],
+    "Secure Flag cookie": [
+      {
+        "method": "GET",
+        "path": "/",
+        "info": "Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'",
+        "level": 1,
+        "parameter": null,
+        "referer": "",
+        "module": "cookieflags",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "wstg": [
+          "WSTG-SESS-02"
+        ]
+      }
+    ],
+    "Spring4Shell": [],
+    "SQL Injection": [],
+    "TLS/SSL misconfigurations": [],
+    "Server Side Request Forgery": [],
+    "Stack Trace Disclosure": [
+      {
+        "method": "GET",
+        "path": "/debug/err",
+        "info": "Response discloses a Python stack trace or error message: Traceback (most recent call last):",
+        "level": 2,
+        "parameter": null,
+        "referer": "",
+        "module": "stacktrace_disclosure",
+        "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+        "wstg": [
+          "WSTG-ERRH-02"
+        ]
+      }
+    ],
+    "Stored HTML Injection": [],
+    "Stored Cross Site Scripting": [],
+    "Subdomain takeover": [],
+    "Blind SQL Injection": [],
+    "Unrestricted File Upload": [],
+    "Vulnerable software": []
+  },
+  "anomalies": {},
+  "infos": {
+    "target": "http://host.docker.internal:8888/",
+    "date": "Tue, 10 Nov 2026 22:11:52 +0000",
+    "version": "Wapiti 3.3.2",
+    "scope": "folder",
+    "auth": null,
+    "crawled_pages_nbr": 5,
+    "detailed_report_level": 0,
+    "crawl_policy": "read_only",
+    "allowed_http_methods": [
+      "GET",
+      "HEAD"
+    ],
+    "form_submission_enabled": false,
+    "blocked_crawler_request_count": 1,
+    "blocked_method_counts": {
+      "POST": 1
+    }
+  }
+}

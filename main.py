@@ -368,9 +368,11 @@ def get_all_scans(db: Session = Depends(get_db)):
                 "scan_id": s.scan_id,
                 "target_domain": s.target.domain_name if s.target else "unknown",
                 "created_at": s.started_at.isoformat() if s.started_at else status_file_info.get("created_at", ""),
+                "status": s.status or status_file_info.get("status") or current_stage,
                 "current_stage": current_stage,
                 "progress": progress,
                 "is_completed": is_completed,
+                "has_error": status_file_info.get("has_error", s.status in ("failed", "partial")),
                 "stats": stats,
             })
     except Exception as e:
@@ -666,7 +668,7 @@ def get_discovery_results(scan_id: str, db: Session = Depends(get_db)):
 
     stat = get_status(scan_id) if scan_id else {}
     target_domain = (stat or {}).get("target_domain", "")
-    subdomains = prioritize_hosts(subdomains, target_domain)
+    subdomains = prioritize_hosts(subdomains, target_domain, include_root=False)
     ports = prioritize_ports(ports, target_domain)
 
     return {
@@ -898,14 +900,34 @@ def normalize_vulnerability_endpoint(vuln_payload: Dict[str, Any]):
     Enterprise-grade Vulnerability Normalization & Enrichment endpoint.
     Standardizes CVE, CWE, CVSS v3.1, OWASP Top 10:2021 & API:2023,
     and enriches with CISA KEV and deduplication fingerprint.
+    Supports both single vulnerability dict and multi-source/batch payloads.
     """
     from core.vuln_normalizer import normalize_vulnerability
     try:
-        normalized = normalize_vulnerability(vuln_payload)
-        return {
-            "status": "success",
-            "data": normalized
-        }
+        items_to_normalize = []
+        if any(k in vuln_payload for k in ("nuclei", "wapiti", "vulnerabilities", "findings")):
+            for k in ("nuclei", "wapiti", "vulnerabilities", "findings"):
+                val = vuln_payload.get(k)
+                if isinstance(val, list):
+                    for item in val:
+                        if isinstance(item, dict):
+                            if "source" not in item:
+                                item["source"] = "Nuclei Engine" if k == "nuclei" else "Wapiti DAST" if k == "wapiti" else "Security Scanner"
+                            items_to_normalize.append(item)
+            normalized_list = [normalize_vulnerability(it) for it in items_to_normalize]
+            return {
+                "status": "success",
+                "count": len(normalized_list),
+                "data": normalized_list,
+                "vulnerabilities": normalized_list
+            }
+        else:
+            normalized = normalize_vulnerability(vuln_payload)
+            return {
+                "status": "success",
+                "data": normalized,
+                "vulnerabilities": [normalized]
+            }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Normalization failed: {str(e)}")
 

@@ -1,0 +1,16 @@
+# Pinned official base image with immutable digest
+FROM cyberwatch/wapiti:3.2.10@sha256:aa93ca70e38c59123e9fdcd61e2c9fddacdfe9778c23322c8f4b3fcd68d74243
+
+# Copy reproducible dependency lock file
+COPY requirements-wapiti.lock /tmp/requirements-wapiti.lock
+
+# Install pinned dependencies without unpinned upgrades
+RUN pip install --no-cache-dir -r /tmp/requirements-wapiti.lock && \
+    rm /tmp/requirements-wapiti.lock
+
+# Copy and apply safe crawl patch (disallow form submissions in Safe profile)
+COPY patches/apply_wapiti_safe_patch.py /tmp/apply_wapiti_safe_patch.py
+RUN python3 /tmp/apply_wapiti_safe_patch.py /usr/local/lib/python3.13/site-packages/wapitiCore && \
+    rm /tmp/apply_wapiti_safe_patch.py
+
+ENTRYPOINT ["wapiti"]

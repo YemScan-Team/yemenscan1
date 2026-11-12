@@ -1,0 +1,491 @@
+[
+  {
+    "finding_id": "d0f85ac2868dcd17",
+    "id": "WAP-CLEARTEX-D0F8",
+    "title": "Cleartext Submission of Password",
+    "severity": "HIGH",
+    "source_severity": "HIGH",
+    "category": "OWASP A02:2021-Cryptographic Failures",
+    "coverage_family": "cleartext_password_submission",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/login",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Cleartext Submission of Password",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/login",
+      "parameter": "password",
+      "http_request": "GET /login HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/login\"",
+      "info": "Password field password sent in clear text from URL http://host.docker.internal:8888/login"
+    },
+    "description": "Password field password sent in clear text from URL http://host.docker.internal:8888/login",
+    "remediation": "Ensure all credential and login forms submit strictly over HTTPS.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/login",
+        "parameter": "password",
+        "http_request": "GET /login HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/login\"",
+        "info": "Password field password sent in clear text from URL http://host.docker.internal:8888/login"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "cleartext_password_submission",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-319",
+    "cvss_score": 7.5,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+    "owasp_category": "A02:2021-Cryptographic Failures",
+    "owasp_api_category": "API8:2023-Security Misconfiguration",
+    "standard_remediation": "Ensure all credential and login forms submit strictly over HTTPS.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "17a7f162a0e7edd456b2ecd1947de6415e92bcbd20bd1bcfe65b166e1f9d4efc"
+  },
+  {
+    "finding_id": "293a4912d5b42e0e",
+    "id": "WAP-WEB_HEAD-293A",
+    "title": "Unencrypted Channels",
+    "severity": "HIGH",
+    "source_severity": "MEDIUM",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Unencrypted Channels",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS."
+    },
+    "description": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS.",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS."
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-319",
+    "cvss_score": 7.5,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+    "owasp_category": "A02:2021-Cryptographic Failures",
+    "owasp_api_category": "API8:2023-Security Misconfiguration",
+    "standard_remediation": "Review server configuration and security headers.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "679e321d871a574a33fa596ba8daaf9302dac55468d280b92c303c4353c4afe0"
+  },
+  {
+    "finding_id": "1aa90dac404dc9fd",
+    "id": "WAP-CSP_POST-1AA9",
+    "title": "Content Security Policy (CSP) Misconfiguration",
+    "severity": "MEDIUM",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "csp_posture",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Content Security Policy Configuration",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "CSP is not set for URL: http://host.docker.internal:8888/"
+    },
+    "description": "CSP is not set for URL: http://host.docker.internal:8888/",
+    "remediation": "Deploy Content-Security-Policy header restricting trusted origins and script execution.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "CSP is not set for URL: http://host.docker.internal:8888/"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "csp_posture",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-693",
+    "cvss_score": 4.3,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+    "owasp_category": "A05:2021-Security Misconfiguration",
+    "owasp_api_category": "API8:2023-Security Misconfiguration",
+    "standard_remediation": "Deploy Content-Security-Policy header restricting trusted origins and script execution.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "0d2f09dc686b32368dac01f35e01694feb64faf9486b681b2cdf0267fc192d7d"
+  },
+  {
+    "finding_id": "2d2eeb28c24601df",
+    "id": "WAP-WEB_HEAD-2D2E",
+    "title": "Clickjacking Protection",
+    "severity": "MEDIUM",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Clickjacking Protection",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "X-Frame-Options is not set"
+    },
+    "description": "X-Frame-Options is not set",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "X-Frame-Options is not set"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-1021",
+    "cvss_score": 4.3,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+    "owasp_category": "A05:2021-Security Misconfiguration",
+    "owasp_api_category": "API8:2023-Security Misconfiguration",
+    "standard_remediation": "Review server configuration and security headers.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "47b75e98a6aa7f1b5e8778749dd0177b4b21538a5dde3fa54797628d54634470"
+  },
+  {
+    "finding_id": "b9fb67de3bdd6769",
+    "id": "WAP-WEB_HEAD-B9FB",
+    "title": "MIME Type Confusion",
+    "severity": "MEDIUM",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "MIME Type Confusion",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "X-Content-Type-Options is not set"
+    },
+    "description": "X-Content-Type-Options is not set",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "X-Content-Type-Options is not set"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-693",
+    "cvss_score": 4.3,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+    "owasp_category": "A05:2021-Security Misconfiguration",
+    "owasp_api_category": "API8:2023-Security Misconfiguration",
+    "standard_remediation": "Review server configuration and security headers.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "c0c49efd4dfbd8ba894d4c4e7359a962bd711fed97371aa554e15be8233f255f"
+  },
+  {
+    "finding_id": "7f1b1a78097f391f",
+    "id": "WAP-COOKIE_S-7F1B",
+    "title": "Insecure Cookie Flag Configuration",
+    "severity": "MEDIUM",
+    "source_severity": "LOW",
+    "category": "OWASP A07:2021-Identification and Authentication Failures",
+    "coverage_family": "cookie_security",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "HttpOnly Flag cookie",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'"
+    },
+    "description": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'\n\n[ملاحظة إضافية من Wapiti DAST]: Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'",
+    "remediation": "Enforce Secure, HttpOnly, and SameSite flags on session and authentication cookies.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'"
+      },
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'"
+      }
+    ],
+    "tags": [
+      "cookie_security",
+      "dast",
+      "wapiti"
+    ],
+    "tool_sources": {
+      "wapiti": {
+        "severity": "LOW",
+        "rule": "Secure Flag cookie",
+        "evidence": {
+          "method": "GET",
+          "path": "/",
+          "parameter": "",
+          "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+          "curl_command": "curl \"http://host.docker.internal:8888/\"",
+          "info": "Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'"
+        }
+      }
+    },
+    "cve_id": null,
+    "cwe_id": "CWE-1004",
+    "cvss_score": 4.3,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+    "owasp_category": "A05:2021-Security Misconfiguration",
+    "owasp_api_category": "API8:2023-Security Misconfiguration",
+    "standard_remediation": "Enforce Secure, HttpOnly, and SameSite flags on session and authentication cookies.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "1d50f57e260aa51780236f5ff41c736dd36065a7ec9c9b9f3ecaddf4703251a8"
+  },
+  {
+    "finding_id": "4ab59b5cfd1fd52e",
+    "id": "WAP-RUNTIME_-4AB5",
+    "title": "Runtime Information and Banner Disclosure",
+    "severity": "MEDIUM",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "runtime_information_disclosure",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/debug/err",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Information Disclosure - Full Path",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/debug/err",
+      "parameter": "",
+      "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+      "info": "Response contains potential system path: /var/app/controller.py"
+    },
+    "description": "Response contains potential system path: /var/app/controller.py",
+    "remediation": "Mask or remove verbose Server, X-Powered-By, and runtime diagnostic banners.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/debug/err",
+        "parameter": "",
+        "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+        "info": "Response contains potential system path: /var/app/controller.py"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "runtime_information_disclosure",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-200",
+    "cvss_score": 5.3,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+    "owasp_category": "A01:2021-Broken Access Control",
+    "owasp_api_category": "API3:2023-Broken Object Property Level Authorization",
+    "standard_remediation": "Mask or remove verbose Server, X-Powered-By, and runtime diagnostic banners.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "e417d6a2fe6b32e397f6c2d9aa7432dc0d43b0fc561be04748bfde8e264421d5"
+  },
+  {
+    "finding_id": "7ed9603981247a88",
+    "id": "WAP-STACKTRA-7ED9",
+    "title": "Application Stack Trace Disclosure",
+    "severity": "MEDIUM",
+    "source_severity": "MEDIUM",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "stacktrace_disclosure",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/debug/err",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Stack Trace Disclosure",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/debug/err",
+      "parameter": "",
+      "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+      "info": "Response discloses a Python stack trace or error message: Traceback (most recent call last):"
+    },
+    "description": "Response discloses a Python stack trace or error message: Traceback (most recent call last):",
+    "remediation": "Disable verbose error messages and stack traces in production environments.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/debug/err",
+        "parameter": "",
+        "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+        "info": "Response discloses a Python stack trace or error message: Traceback (most recent call last):"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "stacktrace_disclosure",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": "CWE-209",
+    "cvss_score": 5.3,
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+    "owasp_category": "A05:2021-Security Misconfiguration",
+    "owasp_api_category": "API3:2023-Broken Object Property Level Authorization",
+    "standard_remediation": "Disable verbose error messages and stack traces in production environments.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "b53409bdcd57e0bdda33b6d776d38645f88335b3aa169c2a2c18d944184d5eb6"
+  },
+  {
+    "finding_id": "d16f89e8a635c11f",
+    "id": "WAP-WEB_HEAD-D16F",
+    "title": "Unencrypted Channels",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/redirect",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Unencrypted Channels",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/redirect",
+      "parameter": "",
+      "http_request": "GET /redirect HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/redirect\"",
+      "info": "No HTTPS redirection for this host. All HTTP requests are served in clear text."
+    },
+    "description": "No HTTPS redirection for this host. All HTTP requests are served in clear text.",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/redirect",
+        "parameter": "",
+        "http_request": "GET /redirect HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/redirect\"",
+        "info": "No HTTPS redirection for this host. All HTTP requests are served in clear text."
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ],
+    "tool_sources": {},
+    "cve_id": null,
+    "cwe_id": null,
+    "cvss_score": 3.0,
+    "cvss_vector": null,
+    "owasp_category": "OWASP A05:2021-Security Misconfiguration",
+    "owasp_api_category": null,
+    "standard_remediation": "Review server configuration and security headers.",
+    "is_cisa_kev": false,
+    "epss_score": null,
+    "fingerprint": "39ce98f6e9db6e62cc7bff9ba8b8cb71582cc4da45036bf1a49a05f3dc238378"
+  }
+]

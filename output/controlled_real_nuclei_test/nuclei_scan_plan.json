@@ -1,0 +1,1405 @@
+{
+  "selection_strategy": "adaptive",
+  "load_protection": "preventive_controls",
+  "preventive_load_controls": true,
+  "circuit_breaker_telemetry": "requires_upstream_proxy",
+  "profiles": [
+    {
+      "profile_id": "profile-001",
+      "targets": [
+        "http://mock-web"
+      ],
+      "origins": [
+        "http://mock-web"
+      ],
+      "signals": {
+        "technologies": [
+          "nginx"
+        ],
+        "routes": []
+      },
+      "template_counts": {
+        "baseline_count": 19,
+        "technology_count": 21,
+        "discovery_count": 0,
+        "total": 40,
+        "skipped_due_to_budget": 0
+      },
+      "limits": {
+        "template_budget": 80,
+        "request_budget": 500,
+        "rate_limit": 10,
+        "concurrency": 5
+      },
+      "selected_templates": [
+        {
+          "template_id": "server-status",
+          "name": "Server Status Panel - Detect",
+          "relative_path": "http/misconfiguration/server-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/server-status.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "misconfig",
+            "serverstatus",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt-endpoint",
+          "name": "robots.txt endpoint prober",
+          "relative_path": "http/miscellaneous/robots-txt-endpoint.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/robots-txt-endpoint.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "generic",
+            "misc",
+            "miscellaneous"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt",
+          "name": "robots.txt file",
+          "relative_path": "http/miscellaneous/robots-txt.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/robots-txt.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "generic",
+            "misc",
+            "miscellaneous",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "oracle-cgi-printenv",
+          "name": "Oracle CGI printenv - Information Disclosure",
+          "relative_path": "http/exposures/configs/oracle-cgi-printenv.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/oracle-cgi-printenv.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "config",
+            "exposure",
+            "oracle",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvas-panel",
+          "name": "OpenVas Login Panel - Detect",
+          "relative_path": "http/exposed-panels/openvas-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/openvas-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "admin",
+            "discovery",
+            "login",
+            "openvas",
+            "panel"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "node-express-dev-env",
+          "name": "Node.js Express NODE_ENV Development Mode",
+          "relative_path": "http/misconfiguration/node-express-dev-env.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/node-express-dev-env.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cicd",
+            "devops",
+            "express",
+            "misconfig",
+            "nodejs",
+            "trace",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "git-config",
+          "name": "Git Configuration - Detect",
+          "relative_path": "http/exposures/configs/git-config.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/git-config.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "config",
+            "exposure",
+            "git",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "ffserver-status",
+          "name": "FFserver Status Detect",
+          "relative_path": "http/exposures/logs/ffserver-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/logs/ffserver-status.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "exposure",
+            "exposures",
+            "ffserver",
+            "logs",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "event-debug-server-status",
+          "name": "Event Debug Server Status",
+          "relative_path": "http/exposures/logs/event-debug-server-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/logs/event-debug-server-status.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "debug",
+            "event",
+            "exposure",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "envoy-metadata-disclosure",
+          "name": "Envoy Proxy - Metadata Disclosure",
+          "relative_path": "http/misconfiguration/envoy-metadata-disclosure.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/envoy-metadata-disclosure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "disclosure",
+            "envoy",
+            "exposure",
+            "misconfig",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "cgi-printenv",
+          "name": "Test CGI Script - Detect",
+          "relative_path": "http/exposures/configs/cgi-printenv.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/cgi-printenv.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cgi",
+            "exposure",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "alienVault-usm",
+          "name": "AlienVault USM Login Panel",
+          "relative_path": "http/exposed-panels/alienvault-usm.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/alienvault-usm.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "alienvault",
+            "discovery",
+            "panel"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "security-txt",
+          "name": "security.txt File",
+          "relative_path": "http/miscellaneous/security-txt.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/security-txt.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "generic",
+            "misc",
+            "miscellaneous",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "apache-spark-env",
+          "name": "Apache Spark Environment - Exposure",
+          "relative_path": "http/misconfiguration/apache-spark-env.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/apache-spark-env.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "apache",
+            "bigdata",
+            "environment",
+            "missconfig",
+            "spark",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "sitemap-detect",
+          "name": "Sitemap Detection",
+          "relative_path": "http/miscellaneous/sitemap-detect.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/sitemap-detect.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 3,
+          "tags": [
+            "generic",
+            "misc",
+            "miscellaneous",
+            "sitemap",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvpn-admin",
+          "name": "OpenVPN Admin Login Panel - Detect",
+          "relative_path": "http/exposed-panels/openvpn-admin.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/openvpn-admin.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 3,
+          "tags": [
+            "admin",
+            "config",
+            "discovery",
+            "openvpn",
+            "panel"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "securenvoy-panel",
+          "name": "SecurEnvoy Login Panel - Detect",
+          "relative_path": "http/exposed-panels/securenvoy-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/securenvoy-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 4,
+          "tags": [
+            "discovery",
+            "panel",
+            "securenvoy"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "springboot-actuator",
+          "name": "Detect Springboot Actuators",
+          "relative_path": "http/technologies/springboot-actuator.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/springboot-actuator.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 5,
+          "tags": [
+            "actuator",
+            "discovery",
+            "springboot",
+            "tech"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "info-cgi-env-leak",
+          "name": "info.cgi  Environment Variable - Disclosure",
+          "relative_path": "http/misconfiguration/info-cgi-env-leak.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/info-cgi-env-leak.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 7,
+          "tags": [
+            "cgi",
+            "disclosure",
+            "env",
+            "exposure",
+            "generic",
+            "info",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "unauthenticated-nginx-dashboard",
+          "name": "Nginx Dashboard",
+          "relative_path": "http/misconfiguration/unauthenticated-nginx-dashboard.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/unauthenticated-nginx-dashboard.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "misconfig",
+            "nginx"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-vhost-traffic-status",
+          "name": "Nginx Vhost Traffic Status",
+          "relative_path": "http/misconfiguration/nginx/nginx-vhost-traffic-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/nginx/nginx-vhost-traffic-status.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "misconfig",
+            "nginx",
+            "status",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-version",
+          "name": "Nginx version detect",
+          "relative_path": "http/technologies/nginx/nginx-version.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/nginx/nginx-version.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "nginx",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-ui-dashboard",
+          "name": "Nginx UI Panel - Detect",
+          "relative_path": "http/exposed-panels/nginx-ui-dashboard.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/nginx-ui-dashboard.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "exposure",
+            "f5",
+            "nginx",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-proxy-manager",
+          "name": "Nginx Proxy Manager Login Panel - Detect",
+          "relative_path": "http/exposed-panels/nginx-proxy-manager.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/nginx-proxy-manager.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "nginx",
+            "panel",
+            "proxy"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-opencloudos-test-page",
+          "name": "Nginx Test Page for OpenCloudOS",
+          "relative_path": "http/technologies/nginx-opencloudos-test-page.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/nginx-opencloudos-test-page.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "nginx",
+            "opencloudos",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-linux-page",
+          "name": "Nginx HTTP Server Amazon Linux",
+          "relative_path": "http/technologies/nginx/nginx-linux-page.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/nginx/nginx-linux-page.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "amazon",
+            "discovery",
+            "nginx",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-eol",
+          "name": "Nginx End-of-Life - Detect",
+          "relative_path": "http/technologies/eol/nginx-eol.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/eol/nginx-eol.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "eol",
+            "nginx",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-config",
+          "name": "Nginx Config - Detect",
+          "relative_path": "http/exposures/configs/nginx-config.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/nginx-config.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "config",
+            "exposure",
+            "nginx",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-auto-installer",
+          "name": "NginX Auto Installer Exposure",
+          "relative_path": "http/misconfiguration/installer/nginx-auto-installer.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/installer/nginx-auto-installer.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "exposure",
+            "install",
+            "misconfig",
+            "nginx",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-admin-panel",
+          "name": "Nginx Admin Manager Login Panel - Detect",
+          "relative_path": "http/exposed-panels/nginx-admin-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/nginx-admin-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "admin",
+            "discovery",
+            "nginx",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "ingress-nginx-valid-admission",
+          "name": "Kubernetes Ingress-Nginx Valid AdmissionReview - Detection",
+          "relative_path": "http/misconfiguration/ingress-nginx-valid-admission.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/ingress-nginx-valid-admission.yaml",
+          "severity": "UNKNOWN",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "ingress",
+            "k8s",
+            "kubernetes",
+            "nginx",
+            "tech",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "default-nginx-page",
+          "name": "Nginx Default Test Page",
+          "relative_path": "http/technologies/nginx/default-nginx-page.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/nginx/default-nginx-page.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "nginx",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "cloudflare-nginx-detect",
+          "name": "Cloudflare Nginx Detect",
+          "relative_path": "http/technologies/cloudflare-nginx-detect.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/cloudflare-nginx-detect.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cloudflare",
+            "discovery",
+            "nginx",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2026-42221",
+          "name": "Nginx UI <= 2.3.7 - Unauthenticated Installer Exposure",
+          "relative_path": "http/cves/2026/CVE-2026-42221.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2026/CVE-2026-42221.yaml",
+          "severity": "HIGH",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cve",
+            "cve2026",
+            "cwe-306",
+            "nginx-ui",
+            "takeover",
+            "unauth"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2026-33032",
+          "name": "Nginx UI - Broken Access Control",
+          "relative_path": "http/cves/2026/CVE-2026-33032.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2026/CVE-2026-33032.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cve",
+            "cve2026",
+            "mcp",
+            "misconfig",
+            "nginx-ui",
+            "unauth",
+            "vkev"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2026-27944",
+          "name": "Nginx UI < 2.3.3 - Information Disclosure",
+          "relative_path": "http/cves/2026/CVE-2026-27944.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2026/CVE-2026-27944.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cve",
+            "cve2026",
+            "exposure",
+            "nginx-ui",
+            "unauth",
+            "vkev"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2025-24514",
+          "name": "Ingress-Nginx Controller - Configuration Injection via Unsanitized `auth-url` Annotation",
+          "relative_path": "http/cves/2025/CVE-2025-24514.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2025/CVE-2025-24514.yaml",
+          "severity": "HIGH",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cloud",
+            "cve",
+            "cve2025",
+            "devops",
+            "ingress",
+            "k8s",
+            "kubernetes",
+            "nginx",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2025-1974",
+          "name": "Ingress-Nginx Controller - Remote Code Execution",
+          "relative_path": "http/cves/2025/CVE-2025-1974.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2025/CVE-2025-1974.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cloud",
+            "cve",
+            "cve2025",
+            "devops",
+            "ingress",
+            "k8s",
+            "kubernetes",
+            "nginx",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-status",
+          "name": "Nginx Status Page",
+          "relative_path": "http/misconfiguration/nginx/nginx-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/nginx/nginx-status.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "misconfig",
+            "nginx",
+            "status",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-shards",
+          "name": "NGINX Shards Disclosure",
+          "relative_path": "http/exposures/logs/nginx-shards.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/logs/nginx-shards.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "exposure",
+            "nginx",
+            "shards",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        }
+      ],
+      "explainability": [
+        {
+          "template_id": "git-config",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "cgi-printenv",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "oracle-cgi-printenv",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "event-debug-server-status",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "ffserver-status",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt-endpoint",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "security-txt",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "sitemap-detect",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "server-status",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "apache-spark-env",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "info-cgi-env-leak",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "node-express-dev-env",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "envoy-metadata-disclosure",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "springboot-actuator",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "alienVault-usm",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvas-panel",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvpn-admin",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "securenvoy-panel",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "CVE-2025-1974",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2025-24514",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2026-27944",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2026-33032",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "CVE-2026-42221",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-admin-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-proxy-manager",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-ui-dashboard",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-config",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-shards",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "ingress-nginx-valid-admission",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "unauthenticated-nginx-dashboard",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-auto-installer",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-status",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-vhost-traffic-status",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "cloudflare-nginx-detect",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-opencloudos-test-page",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-eol",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "default-nginx-page",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-linux-page",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        },
+        {
+          "template_id": "nginx-version",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (nginx:1.25.0)",
+            "webserver header (nginx)"
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "origin_count": 1,
+    "profile_count": 1,
+    "baseline_template_count": 19,
+    "technology_template_count": 21,
+    "discovery_template_count": 0,
+    "selected_template_count": 40,
+    "skipped_due_to_template_budget": 0,
+    "estimated_request_count": 61,
+    "request_budget": 500,
+    "rate_limit": 10,
+    "concurrency": 5,
+    "budget_limited": false,
+    "preventive_load_controls": true,
+    "circuit_breaker_telemetry": "requires_upstream_proxy"
+  }
+}

@@ -1,0 +1,2 @@
+{"method":"GET","target":"https://academy.hackthebox.com","path":"/api/health","responses":[{"uri":"","sc":403,"len":39182}],"time":"2026-11-05T19:55:14Z"}
+{"method":"GET","target":"https://academy.hackthebox.com","path":"/api/health","responses":[{"uri":"","sc":403,"len":39182}],"time":"2026-11-05T19:55:17Z"}

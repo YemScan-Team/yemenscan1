@@ -1,0 +1,89 @@
+{
+  "tool": "wapiti",
+  "version": "3.3.2",
+  "build_variant": "yemscan-safe1",
+  "patches": [
+    "no-form-submission-safe-profile"
+  ],
+  "docker_image": "yemscan/wapiti:3.3.2",
+  "image_id": "sha256:611a8feb8521736d9b91a5776db861323b89ae401909683476c65f239f0dace1",
+  "repository_digest": null,
+  "profile": "safe",
+  "crawl_policy": "read_only",
+  "allowed_http_methods": [
+    "GET",
+    "HEAD"
+  ],
+  "form_submission_enabled": false,
+  "execution_policy": {
+    "max_active_security_scanners_per_origin": 1,
+    "sequential_after": "nuclei"
+  },
+  "enabled_modules": [
+    "http_headers",
+    "csp",
+    "cookieflags",
+    "information_disclosure",
+    "stacktrace_disclosure",
+    "https_redirect",
+    "inconsistent_redirection",
+    "unsecure_password"
+  ],
+  "disabled_redundant_modules": [
+    "cms",
+    "wapp",
+    "htp",
+    "buster",
+    "nikto",
+    "backup",
+    "network_device",
+    "takeover"
+  ],
+  "excluded_review_modules": [
+    "exec",
+    "upload",
+    "permanentxss",
+    "brute_login_form",
+    "timesql",
+    "sql",
+    "xss",
+    "ssrf",
+    "xxe",
+    "file",
+    "crlf",
+    "ldap",
+    "htaccess",
+    "log4shell",
+    "shellshock",
+    "spring4shell"
+  ],
+  "configuration": {
+    "scan_profile": "paranoid",
+    "tasks": 2,
+    "max_depth": 3,
+    "max_scan_time_seconds": 120,
+    "max_attack_time_seconds": 30,
+    "max_parameters": 15,
+    "max_links_per_page": 20,
+    "max_files_per_dir": 20,
+    "timeout_seconds": 5,
+    "verify_ssl": 1,
+    "no_bugreport": true,
+    "format": "json"
+  },
+  "targets": [
+    {
+      "origin": "http://host.docker.internal:8888",
+      "url": "http://host.docker.internal:8888",
+      "seed_urls": [],
+      "seed_count": 0
+    }
+  ],
+  "summary": {
+    "target_count": 1,
+    "enabled_module_count": 8,
+    "disabled_redundant_count": 8,
+    "excluded_review_count": 16,
+    "total_seeds": 0
+  }
+}
