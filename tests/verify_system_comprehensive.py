@@ -22,11 +22,10 @@ print("=" * 80)
 
 # 1. Database Verification
 print("\n[1] VERIFYING DATABASE (yemenscan.db)...")
-db_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "Desktop", "yemenscan1", "yemenscan.db")
-db_path = os.path.abspath(db_path)
-if not os.path.exists(db_path):
-    # fallback to local
-    db_path = r"c:\Users\dell\Desktop\yemenscan1\yemenscan.db"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+db_path = os.path.join(BASE_DIR, "yemenscan.db")
 
 try:
     conn = sqlite3.connect(db_path)
