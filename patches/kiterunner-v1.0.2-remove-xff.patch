@@ -1,0 +1,14 @@
+--- a/cmd/kiterunner/cmd/scan.go
++++ b/cmd/kiterunner/cmd/scan.go
+@@ -131,3 +131,3 @@ func init() {
+ 	scanCmd.Flags().BoolVar(&kitebuilderFullScan, "kitebuilder-full-scan", kitebuilderFullScan, "perform a full scan without first performing a phase scan.")
+-	scanCmd.Flags().StringSliceVarP(&headers, "header", "H", []string{"x-forwarded-for: 127.0.0.1"}, "headers to add to requests")
++	scanCmd.Flags().StringSliceVarP(&headers, "header", "H", []string{}, "headers to add to requests")
+ 
+--- a/cmd/kiterunner/cmd/brute.go
++++ b/cmd/kiterunner/cmd/brute.go
+@@ -106,3 +106,3 @@ func init() {
+ 	bruteCmd.Flags().BoolVarP(&dirsearchCompatabilityMode, "dirsearch-compat", "D", dirsearchCompatabilityMode, "this will replace %EXT% with the extensions provided. backwards compat with dirsearch because shubs loves him some dirsearch")
+-	bruteCmd.Flags().StringSliceVarP(&headers, "header", "H", []string{"x-forwarded-for: 127.0.0.1"}, "headers to add to requests")
++	bruteCmd.Flags().StringSliceVarP(&headers, "header", "H", []string{}, "headers to add to requests")
+ 

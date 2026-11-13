@@ -2,8 +2,8 @@ name: yemenscan_prod
 
 services:
   db:
-    image: docker.io/library/postgres:15
-    pull_policy: never
+    image: postgres:15
+    pull_policy: if_not_present
     restart: unless-stopped
     environment:
       POSTGRES_USER: yemenscan_user

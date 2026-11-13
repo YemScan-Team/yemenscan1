@@ -1,0 +1,12 @@
+{
+  "nuclei_command": "nuclei -l /data/nuclei_targets_profile-001.txt -t /data/selected_templates_profile-001.txt -jsonl -o /data/nuclei_raw_profile-001.jsonl -severity medium,high,critical -pt http -etags dos,fuzz,bruteforce,intrusive,local -dut -ni -lna -iv 4 -rl 10 -c 5 -bs 5 -timeout 5 -retries 0 -duc -nc -silent",
+  "selected_template_count": 69,
+  "estimated_request_cost": 103,
+  "server_observed_request_count": 0,
+  "elapsed_seconds": 181.02,
+  "requests_per_second": 0.0,
+  "peak_concurrency": 0,
+  "estimation_error": 0.0,
+  "conservative_bound_holds": true,
+  "docker_success": false
+}

@@ -1,0 +1,2572 @@
+{
+  "selection_strategy": "adaptive",
+  "load_protection": "preventive_controls",
+  "preventive_load_controls": true,
+  "circuit_breaker_telemetry": "requires_upstream_proxy",
+  "profiles": [
+    {
+      "profile_id": "profile-001",
+      "targets": [
+        "http://127.0.0.1:49458"
+      ],
+      "origins": [
+        "http://127.0.0.1:49458"
+      ],
+      "signals": {
+        "technologies": [
+          "apache"
+        ],
+        "routes": [
+          "swagger"
+        ]
+      },
+      "template_counts": {
+        "baseline_count": 19,
+        "technology_count": 50,
+        "discovery_count": 4,
+        "total": 73,
+        "skipped_due_to_budget": 0
+      },
+      "limits": {
+        "template_budget": 80,
+        "request_budget": 500,
+        "rate_limit": 10,
+        "concurrency": 5
+      },
+      "selected_templates": [
+        {
+          "template_id": "server-status",
+          "name": "Server Status Panel - Detect",
+          "relative_path": "http/misconfiguration/server-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/server-status.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "misconfig",
+            "serverstatus",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt-endpoint",
+          "name": "robots.txt endpoint prober",
+          "relative_path": "http/miscellaneous/robots-txt-endpoint.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/robots-txt-endpoint.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "discovery",
+            "generic",
+            "misc",
+            "miscellaneous"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt",
+          "name": "robots.txt file",
+          "relative_path": "http/miscellaneous/robots-txt.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/robots-txt.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "generic",
+            "misc",
+            "miscellaneous",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "oracle-cgi-printenv",
+          "name": "Oracle CGI printenv - Information Disclosure",
+          "relative_path": "http/exposures/configs/oracle-cgi-printenv.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/oracle-cgi-printenv.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "config",
+            "exposure",
+            "oracle",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvas-panel",
+          "name": "OpenVas Login Panel - Detect",
+          "relative_path": "http/exposed-panels/openvas-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/openvas-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "admin",
+            "discovery",
+            "login",
+            "openvas",
+            "panel"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "node-express-dev-env",
+          "name": "Node.js Express NODE_ENV Development Mode",
+          "relative_path": "http/misconfiguration/node-express-dev-env.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/node-express-dev-env.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cicd",
+            "devops",
+            "express",
+            "misconfig",
+            "nodejs",
+            "trace",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "git-config",
+          "name": "Git Configuration - Detect",
+          "relative_path": "http/exposures/configs/git-config.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/git-config.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "config",
+            "exposure",
+            "git",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "ffserver-status",
+          "name": "FFserver Status Detect",
+          "relative_path": "http/exposures/logs/ffserver-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/logs/ffserver-status.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "exposure",
+            "exposures",
+            "ffserver",
+            "logs",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "event-debug-server-status",
+          "name": "Event Debug Server Status",
+          "relative_path": "http/exposures/logs/event-debug-server-status.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/logs/event-debug-server-status.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "debug",
+            "event",
+            "exposure",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "envoy-metadata-disclosure",
+          "name": "Envoy Proxy - Metadata Disclosure",
+          "relative_path": "http/misconfiguration/envoy-metadata-disclosure.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/envoy-metadata-disclosure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "disclosure",
+            "envoy",
+            "exposure",
+            "misconfig",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "cgi-printenv",
+          "name": "Test CGI Script - Detect",
+          "relative_path": "http/exposures/configs/cgi-printenv.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/cgi-printenv.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cgi",
+            "exposure",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "alienVault-usm",
+          "name": "AlienVault USM Login Panel",
+          "relative_path": "http/exposed-panels/alienvault-usm.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/alienvault-usm.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "alienvault",
+            "discovery",
+            "panel"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "security-txt",
+          "name": "security.txt File",
+          "relative_path": "http/miscellaneous/security-txt.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/security-txt.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "generic",
+            "misc",
+            "miscellaneous",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "apache-spark-env",
+          "name": "Apache Spark Environment - Exposure",
+          "relative_path": "http/misconfiguration/apache-spark-env.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/apache-spark-env.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "apache",
+            "bigdata",
+            "environment",
+            "missconfig",
+            "spark",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "sitemap-detect",
+          "name": "Sitemap Detection",
+          "relative_path": "http/miscellaneous/sitemap-detect.yaml",
+          "container_path": "/opt/nuclei-templates/http/miscellaneous/sitemap-detect.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 3,
+          "tags": [
+            "generic",
+            "misc",
+            "miscellaneous",
+            "sitemap",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvpn-admin",
+          "name": "OpenVPN Admin Login Panel - Detect",
+          "relative_path": "http/exposed-panels/openvpn-admin.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/openvpn-admin.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 3,
+          "tags": [
+            "admin",
+            "config",
+            "discovery",
+            "openvpn",
+            "panel"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "securenvoy-panel",
+          "name": "SecurEnvoy Login Panel - Detect",
+          "relative_path": "http/exposed-panels/securenvoy-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/securenvoy-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 4,
+          "tags": [
+            "discovery",
+            "panel",
+            "securenvoy"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "springboot-actuator",
+          "name": "Detect Springboot Actuators",
+          "relative_path": "http/technologies/springboot-actuator.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/springboot-actuator.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 5,
+          "tags": [
+            "actuator",
+            "discovery",
+            "springboot",
+            "tech"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "info-cgi-env-leak",
+          "name": "info.cgi  Environment Variable - Disclosure",
+          "relative_path": "http/misconfiguration/info-cgi-env-leak.yaml",
+          "container_path": "/opt/nuclei-templates/http/misconfiguration/info-cgi-env-leak.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 7,
+          "tags": [
+            "cgi",
+            "disclosure",
+            "env",
+            "exposure",
+            "generic",
+            "info",
+            "vuln"
+          ],
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "yarn-manager-exposure",
+          "name": "Apache YARN ResourceManager Panel - Detect",
+          "relative_path": "http/exposed-panels/yarn-manager-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/yarn-manager-exposure.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "exposure",
+            "panel",
+            "yarn"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "spark-panel",
+          "name": "Apache Spark Panel - Detect",
+          "relative_path": "http/exposed-panels/spark-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/spark-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "panel",
+            "spark"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "shardingsphere-panel",
+          "name": "ShardingSphere ElasticJob UI Panel",
+          "relative_path": "http/exposed-panels/shardingsphere-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/shardingsphere-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "login",
+            "panel",
+            "shardingsphere"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "rocketmq-console-exposure",
+          "name": "Apache RocketMQ Console Panel - Detect",
+          "relative_path": "http/exposed-panels/rocketmq-console-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/rocketmq-console-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "pulsar-adminui-panel",
+          "name": "Pulsar Admin UI Panel - Detect",
+          "relative_path": "http/exposed-panels/pulsar-adminui-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/pulsar-adminui-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "admin",
+            "apache",
+            "discovery",
+            "panel",
+            "pulsar",
+            "pulsarui"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "pulsar-admin-console",
+          "name": "Pulsar Admin Console Panel - Detect",
+          "relative_path": "http/exposed-panels/pulsar-admin-console.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/pulsar-admin-console.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "admin",
+            "apache",
+            "console",
+            "discovery",
+            "panel",
+            "pulsar"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-monitoring",
+          "name": "Apache Kafka Monitor Login Panel - Detect",
+          "relative_path": "http/exposed-panels/kafka-monitoring.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/kafka-monitoring.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "kafka",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-consumer-monitor",
+          "name": "Apache Kafka Consumer Offset Monitor Panel - Detect",
+          "relative_path": "http/exposed-panels/kafka-consumer-monitor.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/kafka-consumer-monitor.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "kafka",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-connect-ui",
+          "name": "Apache Kafka Connect UI Login Panel - Detect",
+          "relative_path": "http/exposed-panels/kafka-connect-ui.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/kafka-connect-ui.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "kafka",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-center-login",
+          "name": "Apache Kafka Control Center Login Panel - Detect",
+          "relative_path": "http/exposed-panels/kafka-center-login.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/kafka-center-login.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "kafka",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "hadoop-exposure",
+          "name": "Apache Hadoop Panel - Detect",
+          "relative_path": "http/exposed-panels/hadoop-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/hadoop-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "hadoop",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "flink-exposure",
+          "name": "Apache Flink Login Panel - Detect",
+          "relative_path": "http/exposed-panels/flink-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/flink-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "flink",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "druid-panel",
+          "name": "Druid Monitor Login Panel - Detect",
+          "relative_path": "http/exposed-panels/druid-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/druid-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "druid",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "couchdb-fauxton",
+          "name": "Apache CouchDB Fauxton Panel - Detect",
+          "relative_path": "http/exposed-panels/couchdb-fauxton.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/couchdb-fauxton.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "couchdb",
+            "discovery",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "couchdb-exposure",
+          "name": "Apache CouchDB Panel - Detect",
+          "relative_path": "http/exposed-panels/couchdb-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/couchdb-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "couchdb",
+            "discovery",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "autoset-detect",
+          "name": "AutoSet Page - Detect",
+          "relative_path": "http/exposed-panels/autoset-detect.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/autoset-detect.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "autoset",
+            "discovery",
+            "panel",
+            "php",
+            "tech"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-ozone-conf",
+          "name": "Apache Ozone - Exposure",
+          "relative_path": "http/exposures/configs/apache-ozone-conf.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/apache-ozone-conf.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "detect",
+            "ozone",
+            "tech",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-kyuubi-config",
+          "name": "Apache Kyuubi - Configuration Exposure",
+          "relative_path": "http/exposures/configs/apache-kyuubi-config.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/apache-kyuubi-config.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "config",
+            "exposure",
+            "kyuubi",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-jspwiki-ip-userenum",
+          "name": "Apache JSPWiki - User IP Enumeration",
+          "relative_path": "http/exposures/configs/apache-jspwiki-ip-userenum.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/apache-jspwiki-ip-userenum.yaml",
+          "severity": "LOW",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "enumeration",
+            "jspwiki"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-jmeter-dashboard",
+          "name": "Apache JMeter Dashboard Login Panel - Detect",
+          "relative_path": "http/exposed-panels/apache-jmeter-dashboard.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/apache-jmeter-dashboard.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "discovery",
+            "jmeter",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-hive-config",
+          "name": "Apache Hive Configuration - Exposure",
+          "relative_path": "http/exposures/configs/apache-hive-config.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/apache-hive-config.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "config",
+            "exposure",
+            "hive",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-config",
+          "name": "Apache Configuration File - Detect",
+          "relative_path": "http/exposures/configs/apache-config.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/apache-config.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "config",
+            "exposure",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-apollo-panel",
+          "name": "Apache Apollo Panel - Detect",
+          "relative_path": "http/exposed-panels/apache/apache-apollo-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/apache/apache-apollo-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "apollo",
+            "detect",
+            "discovery",
+            "login",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-apisix-panel",
+          "name": "Apache APISIX Login Panel - Detect",
+          "relative_path": "http/exposed-panels/apache/apache-apisix-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/apache/apache-apisix-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "apisix",
+            "detect",
+            "discovery",
+            "login",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "ambari-exposure",
+          "name": "Apache Ambari Exposure Admin Login Panel",
+          "relative_path": "http/exposed-panels/ambari-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/ambari-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "ambari",
+            "apache",
+            "discovery",
+            "exposure",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "airflow-configuration-exposure",
+          "name": "Apache Airflow Configuration Page - Detect",
+          "relative_path": "http/exposures/configs/airflow-configuration-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/configs/airflow-configuration-exposure.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "airflow",
+            "apache",
+            "config",
+            "exposure",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2024-32114",
+          "name": "Apache ActiveMQ 6.x < 6.1.2 - Broken Access Control",
+          "relative_path": "http/cves/2024/CVE-2024-32114.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2024/CVE-2024-32114.yaml",
+          "severity": "HIGH",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "activemq",
+            "apache",
+            "cve",
+            "cve2024",
+            "jolokia",
+            "vkev"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2023-50290",
+          "name": "Apache Solr - Host Environment Variables Leak via Metrics API",
+          "relative_path": "http/cves/2023/CVE-2023-50290.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2023/CVE-2023-50290.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2023",
+            "exposure",
+            "solr",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2023-45648",
+          "name": "Apache Tomcat - HTTP Request Smuggling",
+          "relative_path": "http/cves/2023/CVE-2023-45648.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2023/CVE-2023-45648.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2023",
+            "http-smuggling",
+            "passive",
+            "tomcat"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2022-33891",
+          "name": "Apache Spark UI - Remote Command Injection",
+          "relative_path": "http/cves/2022/CVE-2022-33891.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2022/CVE-2022-33891.yaml",
+          "severity": "HIGH",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2022",
+            "kev",
+            "packetstorm",
+            "spark",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2022-23944",
+          "name": "Apache ShenYu Admin Unauth Access",
+          "relative_path": "http/cves/2022/CVE-2022-23944.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2022/CVE-2022-23944.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2022",
+            "shenyu",
+            "unauth",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2022-22733",
+          "name": "Apache ShardingSphere ElasticJob-UI privilege escalation",
+          "relative_path": "http/cves/2022/CVE-2022-22733.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2022/CVE-2022-22733.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2022",
+            "exposure",
+            "sharingsphere",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2021-45232",
+          "name": "Apache APISIX Dashboard <2.10.1 - API Unauthorized Access",
+          "relative_path": "http/cves/2021/CVE-2021-45232.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2021/CVE-2021-45232.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "apisix",
+            "cve",
+            "cve2021",
+            "unauth",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2021-37580",
+          "name": "Apache ShenYu Admin JWT - Authentication Bypass",
+          "relative_path": "http/cves/2021/CVE-2021-37580.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2021/CVE-2021-37580.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2021",
+            "jwt",
+            "shenyu",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2021-27850",
+          "name": "Apache Tapestry - Remote Code Execution",
+          "relative_path": "http/cves/2021/CVE-2021-27850.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2021/CVE-2021-27850.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2021",
+            "tapestry",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2020-9496",
+          "name": "Apache OFBiz 17.12.03 - Cross-Site Scripting",
+          "relative_path": "http/cves/2020/CVE-2020-9496.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2020/CVE-2020-9496.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2020",
+            "java",
+            "ofbiz",
+            "packetstorm",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2020-13937",
+          "name": "Apache Kylin - Exposed Configuration File",
+          "relative_path": "http/cves/2020/CVE-2020-13937.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2020/CVE-2020-13937.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2020",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2019-10092",
+          "name": "Apache HTTP Server <=2.4.39 - HTML Injection/Partial Cross-Site Scripting",
+          "relative_path": "http/cves/2019/CVE-2019-10092.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2019/CVE-2019-10092.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2019",
+            "htmli",
+            "injection",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2019-0232",
+          "name": "Apache Tomcat `CGIServlet` enableCmdLineArguments - Remote Code Execution",
+          "relative_path": "http/cves/2019/CVE-2019-0232.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2019/CVE-2019-0232.yaml",
+          "severity": "HIGH",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2019",
+            "packetstorm",
+            "seclists",
+            "tomcat",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2012-0394",
+          "name": "Apache Struts <2.3.1.1 - Remote Code Execution",
+          "relative_path": "http/cves/2012/CVE-2012-0394.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2012/CVE-2012-0394.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2012",
+            "edb",
+            "injection",
+            "ognl",
+            "struts",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "superset-login",
+          "name": "Apache Superset Login Panel - Detect",
+          "relative_path": "http/exposed-panels/superset-login.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/superset-login.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "apache",
+            "discovery",
+            "panel",
+            "superset"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "solr-panel-exposure",
+          "name": "Apache Solr Admin Panel - Detect",
+          "relative_path": "http/exposed-panels/solr-panel-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/solr-panel-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "admin",
+            "apache",
+            "discovery",
+            "panel",
+            "solr"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-topics-ui",
+          "name": "Apache Kafka Topics Panel - Detect",
+          "relative_path": "http/exposed-panels/kafka-topics-ui.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/kafka-topics-ui.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "apache",
+            "detect",
+            "discovery",
+            "kafka",
+            "panel",
+            "provectus"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-mesos-panel",
+          "name": "Apache Mesos - Panel Detect",
+          "relative_path": "http/exposed-panels/apache/apache-mesos-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/apache/apache-mesos-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "apache",
+            "discovery",
+            "mesos",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "airflow-admin-login-panel",
+          "name": "Apache Airflow Admin Login Panel",
+          "relative_path": "http/exposed-panels/airflow-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/airflow-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "admin",
+            "airflow",
+            "apache",
+            "discovery",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2024-29868",
+          "name": "Apache StreamPipes <= 0.93.0 - Use of Cryptographically Weak PRNG in Recovery Token Generation",
+          "relative_path": "http/cves/2024/CVE-2024-29868.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2024/CVE-2024-29868.yaml",
+          "severity": "CRITICAL",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "account-takeover",
+            "apache",
+            "cve",
+            "cve2024",
+            "passive",
+            "streampipes",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2018-11759",
+          "name": "Apache Tomcat JK Connect <=1.2.44 - Manager Access",
+          "relative_path": "http/cves/2018/CVE-2018-11759.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2018/CVE-2018-11759.yaml",
+          "severity": "HIGH",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "apache",
+            "cve",
+            "cve2018",
+            "httpd",
+            "mod-jk",
+            "tomcat",
+            "vkev",
+            "vuln"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-mod-cluster-exposure",
+          "name": "Apache `mod_proxy_cluster` Cluster Manager Interface - Exposure",
+          "relative_path": "http/exposed-panels/apache/apache-mod-cluster-exposure.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/apache/apache-mod-cluster-exposure.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 3,
+          "tags": [
+            "apache",
+            "cluster",
+            "discovery",
+            "exposure",
+            "mod_proxy"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "activemq-panel",
+          "name": "Apache ActiveMQ Exposure",
+          "relative_path": "http/exposed-panels/activemq-panel.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/activemq-panel.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 3,
+          "tags": [
+            "activemq",
+            "apache",
+            "discovery",
+            "login",
+            "panel"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "litellm-swagger-detect",
+          "name": "LiteLLM API - Swagger UI Detection",
+          "relative_path": "http/technologies/litellm-swagger-detect.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/litellm-swagger-detect.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "ai",
+            "api",
+            "litellm",
+            "llm",
+            "swagger",
+            "tech"
+          ],
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        },
+        {
+          "template_id": "jeecg-boot-swagger",
+          "name": "Jeecg Boot Swagger Bootstrap UI - Detect",
+          "relative_path": "http/exposures/apis/jeecg-boot-swagger.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposures/apis/jeecg-boot-swagger.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "detect",
+            "discovery",
+            "exposure",
+            "jeecg",
+            "swagger"
+          ],
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        },
+        {
+          "template_id": "CVE-2024-22207",
+          "name": "Fastify Swagger-UI - Information Disclosure",
+          "relative_path": "http/cves/2024/CVE-2024-22207.yaml",
+          "container_path": "/opt/nuclei-templates/http/cves/2024/CVE-2024-22207.yaml",
+          "severity": "MEDIUM",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 1,
+          "tags": [
+            "cve",
+            "cve2024",
+            "exposure",
+            "swagger-ui",
+            "vuln"
+          ],
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        },
+        {
+          "template_id": "apache-tomcat-exposed",
+          "name": "Tomcat Exposed - Detect",
+          "relative_path": "http/exposed-panels/apache/apache-tomcat-exposed.yaml",
+          "container_path": "/opt/nuclei-templates/http/exposed-panels/apache/apache-tomcat-exposed.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 5,
+          "tags": [
+            "apache",
+            "discovery",
+            "login",
+            "panel",
+            "tomcat"
+          ],
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "browserless-swagger-detect",
+          "name": "Browserless API Swagger - Detect",
+          "relative_path": "http/technologies/browserless-swagger-detect.yaml",
+          "container_path": "/opt/nuclei-templates/http/technologies/browserless-swagger-detect.yaml",
+          "severity": "INFO",
+          "policy": "safe",
+          "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+          "methods": [
+            "GET"
+          ],
+          "request_cost": 2,
+          "tags": [
+            "api",
+            "browserless",
+            "swagger",
+            "tech"
+          ],
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        }
+      ],
+      "explainability": [
+        {
+          "template_id": "git-config",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "cgi-printenv",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "oracle-cgi-printenv",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "event-debug-server-status",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "ffserver-status",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "robots-txt-endpoint",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "security-txt",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "sitemap-detect",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "server-status",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "apache-spark-env",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "info-cgi-env-leak",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "node-express-dev-env",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "envoy-metadata-disclosure",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "springboot-actuator",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "alienVault-usm",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvas-panel",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "openvpn-admin",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "securenvoy-panel",
+          "layer": "baseline",
+          "score": 100,
+          "reasons": [
+            "Universal Safe Baseline check"
+          ]
+        },
+        {
+          "template_id": "CVE-2012-0394",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2018-11759",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2019-0232",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2019-10092",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2020-13937",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2020-9496",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2021-27850",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2021-37580",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2021-45232",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2022-22733",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2022-23944",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2022-33891",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2023-45648",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2023-50290",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2024-29868",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2024-32114",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "activemq-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "airflow-admin-login-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "ambari-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-jmeter-dashboard",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "autoset-detect",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "couchdb-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "couchdb-fauxton",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "druid-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "flink-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "hadoop-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-center-login",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-connect-ui",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-consumer-monitor",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-monitoring",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "kafka-topics-ui",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "pulsar-admin-console",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "pulsar-adminui-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "rocketmq-console-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "shardingsphere-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "solr-panel-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "spark-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "superset-login",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "yarn-manager-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-apisix-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-apollo-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-mesos-panel",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-mod-cluster-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-tomcat-exposed",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "airflow-configuration-exposure",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-config",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-hive-config",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-jspwiki-ip-userenum",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-kyuubi-config",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "apache-ozone-conf",
+          "layer": "technology",
+          "score": 180,
+          "reasons": [
+            "httpx exact technology with version (Apache:2.4.41)",
+            "webserver header (Apache/2.4.41)"
+          ]
+        },
+        {
+          "template_id": "CVE-2024-22207",
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        },
+        {
+          "template_id": "jeecg-boot-swagger",
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        },
+        {
+          "template_id": "browserless-swagger-detect",
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        },
+        {
+          "template_id": "litellm-swagger-detect",
+          "layer": "discovery",
+          "score": 60,
+          "reasons": [
+            "Discovery route match: swagger"
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "origin_count": 1,
+    "profile_count": 1,
+    "baseline_template_count": 19,
+    "technology_template_count": 50,
+    "discovery_template_count": 4,
+    "selected_template_count": 73,
+    "skipped_due_to_template_budget": 0,
+    "estimated_request_count": 108,
+    "request_budget": 500,
+    "rate_limit": 10,
+    "concurrency": 5,
+    "budget_limited": false,
+    "preventive_load_controls": true,
+    "circuit_breaker_telemetry": "requires_upstream_proxy"
+  }
+}

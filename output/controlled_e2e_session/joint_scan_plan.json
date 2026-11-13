@@ -1,0 +1,855 @@
+{
+  "version": "1.1.0",
+  "description": "Unified Pre-Scan Intelligence and Coordination Plan for YemenScan",
+  "coordination_policy": {
+    "max_active_security_scanners_per_origin": 1,
+    "execution_order": [
+      "nuclei",
+      "wapiti"
+    ],
+    "single_primary_scanner": true,
+    "disallow_duplicate_families": true,
+    "no_phantom_coverage": true
+  },
+  "duplicate_capability_families": [],
+  "coverage_ownership": {
+    "nuclei": {
+      "capabilities": [
+        "known_cve_signature",
+        "product_specific_vulnerability",
+        "technology_version_check",
+        "exposed_configuration",
+        "exposed_panels",
+        "backup_file_discovery",
+        "safe_signature_based_checks"
+      ],
+      "count": 7
+    },
+    "wapiti": {
+      "capabilities": [
+        "web_headers",
+        "csp_posture",
+        "cookie_security",
+        "runtime_information_disclosure",
+        "stacktrace_disclosure",
+        "https_redirection",
+        "inconsistent_redirection",
+        "cleartext_password_submission"
+      ],
+      "count": 8
+    }
+  },
+  "scanners": {
+    "nuclei": {
+      "tool": "nuclei",
+      "engine_version": "v3.11.1",
+      "selected_templates_count": 19,
+      "estimated_requests": 38,
+      "rate_limit": 10,
+      "concurrency": 5,
+      "profiles_count": 1
+    },
+    "wapiti": {
+      "tool": "wapiti",
+      "engine_version": "3.3.2",
+      "profile": "safe",
+      "enabled_modules": [
+        "http_headers",
+        "csp",
+        "cookieflags",
+        "information_disclosure",
+        "stacktrace_disclosure",
+        "https_redirect",
+        "inconsistent_redirection",
+        "unsecure_password"
+      ],
+      "disabled_redundant_modules_count": 8,
+      "excluded_review_modules_count": 16,
+      "targets_count": 1,
+      "limits": {
+        "scan_profile": "paranoid",
+        "tasks": 2,
+        "max_depth": 3,
+        "max_scan_time_seconds": 120,
+        "max_attack_time_seconds": 30,
+        "max_parameters": 15,
+        "max_links_per_page": 20,
+        "max_files_per_dir": 20,
+        "timeout_seconds": 5,
+        "verify_ssl": 1,
+        "no_bugreport": true,
+        "format": "json"
+      }
+    }
+  },
+  "summary": {
+    "origins_count": 1,
+    "scanners_coordinated": [
+      "nuclei",
+      "wapiti"
+    ],
+    "max_active_security_scanners_per_origin": 1,
+    "sequential_execution": true,
+    "duplicate_capability_families_count": 0
+  },
+  "nuclei_plan": {
+    "selection_strategy": "adaptive",
+    "load_protection": "preventive_controls",
+    "preventive_load_controls": true,
+    "circuit_breaker_telemetry": "requires_upstream_proxy",
+    "profiles": [
+      {
+        "profile_id": "profile-001",
+        "targets": [
+          "http://host.docker.internal:8888"
+        ],
+        "origins": [
+          "http://host.docker.internal:8888"
+        ],
+        "signals": {
+          "technologies": [],
+          "routes": []
+        },
+        "template_counts": {
+          "baseline_count": 19,
+          "technology_count": 0,
+          "discovery_count": 0,
+          "total": 19,
+          "skipped_due_to_budget": 0
+        },
+        "limits": {
+          "template_budget": 80,
+          "request_budget": 500,
+          "rate_limit": 10,
+          "concurrency": 5
+        },
+        "selected_templates": [
+          {
+            "template_id": "server-status",
+            "name": "Server Status Panel - Detect",
+            "relative_path": "http/misconfiguration/server-status.yaml",
+            "container_path": "/opt/nuclei-templates/http/misconfiguration/server-status.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "misconfig",
+              "serverstatus",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "robots-txt-endpoint",
+            "name": "robots.txt endpoint prober",
+            "relative_path": "http/miscellaneous/robots-txt-endpoint.yaml",
+            "container_path": "/opt/nuclei-templates/http/miscellaneous/robots-txt-endpoint.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "discovery",
+              "generic",
+              "misc",
+              "miscellaneous"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "robots-txt",
+            "name": "robots.txt file",
+            "relative_path": "http/miscellaneous/robots-txt.yaml",
+            "container_path": "/opt/nuclei-templates/http/miscellaneous/robots-txt.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "generic",
+              "misc",
+              "miscellaneous",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "oracle-cgi-printenv",
+            "name": "Oracle CGI printenv - Information Disclosure",
+            "relative_path": "http/exposures/configs/oracle-cgi-printenv.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposures/configs/oracle-cgi-printenv.yaml",
+            "severity": "MEDIUM",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "config",
+              "exposure",
+              "oracle",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "openvas-panel",
+            "name": "OpenVas Login Panel - Detect",
+            "relative_path": "http/exposed-panels/openvas-panel.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposed-panels/openvas-panel.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "admin",
+              "discovery",
+              "login",
+              "openvas",
+              "panel"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "node-express-dev-env",
+            "name": "Node.js Express NODE_ENV Development Mode",
+            "relative_path": "http/misconfiguration/node-express-dev-env.yaml",
+            "container_path": "/opt/nuclei-templates/http/misconfiguration/node-express-dev-env.yaml",
+            "severity": "MEDIUM",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "cicd",
+              "devops",
+              "express",
+              "misconfig",
+              "nodejs",
+              "trace",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "git-config",
+            "name": "Git Configuration - Detect",
+            "relative_path": "http/exposures/configs/git-config.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposures/configs/git-config.yaml",
+            "severity": "MEDIUM",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "config",
+              "exposure",
+              "git",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "ffserver-status",
+            "name": "FFserver Status Detect",
+            "relative_path": "http/exposures/logs/ffserver-status.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposures/logs/ffserver-status.yaml",
+            "severity": "LOW",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "exposure",
+              "exposures",
+              "ffserver",
+              "logs",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "event-debug-server-status",
+            "name": "Event Debug Server Status",
+            "relative_path": "http/exposures/logs/event-debug-server-status.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposures/logs/event-debug-server-status.yaml",
+            "severity": "LOW",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "debug",
+              "event",
+              "exposure",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "envoy-metadata-disclosure",
+            "name": "Envoy Proxy - Metadata Disclosure",
+            "relative_path": "http/misconfiguration/envoy-metadata-disclosure.yaml",
+            "container_path": "/opt/nuclei-templates/http/misconfiguration/envoy-metadata-disclosure.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "disclosure",
+              "envoy",
+              "exposure",
+              "misconfig",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "cgi-printenv",
+            "name": "Test CGI Script - Detect",
+            "relative_path": "http/exposures/configs/cgi-printenv.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposures/configs/cgi-printenv.yaml",
+            "severity": "MEDIUM",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "cgi",
+              "exposure",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "alienVault-usm",
+            "name": "AlienVault USM Login Panel",
+            "relative_path": "http/exposed-panels/alienvault-usm.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposed-panels/alienvault-usm.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 1,
+            "tags": [
+              "alienvault",
+              "discovery",
+              "panel"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "security-txt",
+            "name": "security.txt File",
+            "relative_path": "http/miscellaneous/security-txt.yaml",
+            "container_path": "/opt/nuclei-templates/http/miscellaneous/security-txt.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 2,
+            "tags": [
+              "generic",
+              "misc",
+              "miscellaneous",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "apache-spark-env",
+            "name": "Apache Spark Environment - Exposure",
+            "relative_path": "http/misconfiguration/apache-spark-env.yaml",
+            "container_path": "/opt/nuclei-templates/http/misconfiguration/apache-spark-env.yaml",
+            "severity": "MEDIUM",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 2,
+            "tags": [
+              "apache",
+              "bigdata",
+              "environment",
+              "missconfig",
+              "spark",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "sitemap-detect",
+            "name": "Sitemap Detection",
+            "relative_path": "http/miscellaneous/sitemap-detect.yaml",
+            "container_path": "/opt/nuclei-templates/http/miscellaneous/sitemap-detect.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 3,
+            "tags": [
+              "generic",
+              "misc",
+              "miscellaneous",
+              "sitemap",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "openvpn-admin",
+            "name": "OpenVPN Admin Login Panel - Detect",
+            "relative_path": "http/exposed-panels/openvpn-admin.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposed-panels/openvpn-admin.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 3,
+            "tags": [
+              "admin",
+              "config",
+              "discovery",
+              "openvpn",
+              "panel"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "securenvoy-panel",
+            "name": "SecurEnvoy Login Panel - Detect",
+            "relative_path": "http/exposed-panels/securenvoy-panel.yaml",
+            "container_path": "/opt/nuclei-templates/http/exposed-panels/securenvoy-panel.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 4,
+            "tags": [
+              "discovery",
+              "panel",
+              "securenvoy"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "springboot-actuator",
+            "name": "Detect Springboot Actuators",
+            "relative_path": "http/technologies/springboot-actuator.yaml",
+            "container_path": "/opt/nuclei-templates/http/technologies/springboot-actuator.yaml",
+            "severity": "INFO",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 5,
+            "tags": [
+              "actuator",
+              "discovery",
+              "springboot",
+              "tech"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "info-cgi-env-leak",
+            "name": "info.cgi  Environment Variable - Disclosure",
+            "relative_path": "http/misconfiguration/info-cgi-env-leak.yaml",
+            "container_path": "/opt/nuclei-templates/http/misconfiguration/info-cgi-env-leak.yaml",
+            "severity": "MEDIUM",
+            "policy": "safe",
+            "reason": "Non-mutating GET/HEAD, bounded cost, safe passive check",
+            "methods": [
+              "GET"
+            ],
+            "request_cost": 7,
+            "tags": [
+              "cgi",
+              "disclosure",
+              "env",
+              "exposure",
+              "generic",
+              "info",
+              "vuln"
+            ],
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          }
+        ],
+        "explainability": [
+          {
+            "template_id": "git-config",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "cgi-printenv",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "oracle-cgi-printenv",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "event-debug-server-status",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "ffserver-status",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "robots-txt",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "robots-txt-endpoint",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "security-txt",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "sitemap-detect",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "server-status",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "apache-spark-env",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "info-cgi-env-leak",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "node-express-dev-env",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "envoy-metadata-disclosure",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "springboot-actuator",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "alienVault-usm",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "openvas-panel",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "openvpn-admin",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          },
+          {
+            "template_id": "securenvoy-panel",
+            "layer": "baseline",
+            "score": 100,
+            "reasons": [
+              "Universal Safe Baseline check"
+            ]
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "origin_count": 1,
+      "profile_count": 1,
+      "baseline_template_count": 19,
+      "technology_template_count": 0,
+      "discovery_template_count": 0,
+      "selected_template_count": 19,
+      "skipped_due_to_template_budget": 0,
+      "estimated_request_count": 38,
+      "request_budget": 500,
+      "rate_limit": 10,
+      "concurrency": 5,
+      "budget_limited": false,
+      "preventive_load_controls": true,
+      "circuit_breaker_telemetry": "requires_upstream_proxy"
+    }
+  },
+  "wapiti_plan": {
+    "tool": "wapiti",
+    "version": "3.3.2",
+    "build_variant": "yemscan-safe1",
+    "patches": [
+      "no-form-submission-safe-profile"
+    ],
+    "docker_image": "yemscan/wapiti:3.3.2",
+    "image_id": "sha256:611a8feb8521736d9b91a5776db861323b89ae401909683476c65f239f0dace1",
+    "repository_digest": null,
+    "profile": "safe",
+    "crawl_policy": "read_only",
+    "allowed_http_methods": [
+      "GET",
+      "HEAD"
+    ],
+    "form_submission_enabled": false,
+    "execution_policy": {
+      "max_active_security_scanners_per_origin": 1,
+      "sequential_after": "nuclei"
+    },
+    "enabled_modules": [
+      "http_headers",
+      "csp",
+      "cookieflags",
+      "information_disclosure",
+      "stacktrace_disclosure",
+      "https_redirect",
+      "inconsistent_redirection",
+      "unsecure_password"
+    ],
+    "disabled_redundant_modules": [
+      "cms",
+      "wapp",
+      "htp",
+      "buster",
+      "nikto",
+      "backup",
+      "network_device",
+      "takeover"
+    ],
+    "excluded_review_modules": [
+      "exec",
+      "upload",
+      "permanentxss",
+      "brute_login_form",
+      "timesql",
+      "sql",
+      "xss",
+      "ssrf",
+      "xxe",
+      "file",
+      "crlf",
+      "ldap",
+      "htaccess",
+      "log4shell",
+      "shellshock",
+      "spring4shell"
+    ],
+    "configuration": {
+      "scan_profile": "paranoid",
+      "tasks": 2,
+      "max_depth": 3,
+      "max_scan_time_seconds": 120,
+      "max_attack_time_seconds": 30,
+      "max_parameters": 15,
+      "max_links_per_page": 20,
+      "max_files_per_dir": 20,
+      "timeout_seconds": 5,
+      "verify_ssl": 1,
+      "no_bugreport": true,
+      "format": "json"
+    },
+    "targets": [
+      {
+        "origin": "http://host.docker.internal:8888",
+        "url": "http://host.docker.internal:8888",
+        "seed_urls": [],
+        "seed_count": 0
+      }
+    ],
+    "summary": {
+      "target_count": 1,
+      "enabled_module_count": 8,
+      "disabled_redundant_count": 8,
+      "excluded_review_count": 16,
+      "total_seeds": 0
+    }
+  }
+}

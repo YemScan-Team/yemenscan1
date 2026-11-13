@@ -1,0 +1,31 @@
+# Multi-stage Dockerfile for Assetnote Kiterunner v1.0.2-yemscan1
+# - Pinned official Go 1.19 Alpine builder with exact sha256 digest
+# - Pinned official Alpine 3.18 runtime with exact sha256 digest
+# - Eliminates default 'X-Forwarded-For: 127.0.0.1' header injection
+# - Uses vendored dependencies (-mod=vendor) for 100% reproducible offline build
+# - Bundles official verified routes-small.kite wordlist in /opt/kiterunner/
+
+FROM golang:1.19-alpine@sha256:0ec0646e208ea58e5d29e558e39f2e59fccf39b7bda306cb53bbaff91919eca5 AS builder
+
+WORKDIR /src
+COPY kiterunner-src/kiterunner-1.0.2/ ./
+
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor \
+    -ldflags "-X 'github.com/assetnote/kiterunner/cmd/kiterunner/cmd.Version=v1.0.2-yemscan1' -X 'github.com/assetnote/kiterunner/cmd/kiterunner/cmd.Commit=e7a7fa6' -X 'github.com/assetnote/kiterunner/cmd/kiterunner/cmd.Date=2021-04-11' -s -w" \
+    -o /kr ./cmd/kiterunner
+
+# Final minimal runtime image with pinned alpine version and digest
+FROM alpine:3.18@sha256:de0eb0b3f2a47ba1eb89389859a9bd88b28e82f5826b6969ad604979713c2d4f
+
+RUN apk add --no-cache ca-certificates bind-tools
+
+COPY --from=builder /kr /usr/local/bin/kr
+
+# Bundle official routes-small.kite
+RUN mkdir -p /opt/kiterunner /data
+COPY routes-small.kite /opt/kiterunner/routes-small.kite
+
+WORKDIR /data
+
+ENTRYPOINT ["kr"]
+CMD ["--help"]

@@ -1,0 +1,278 @@
+{
+  "version": "1.1.0",
+  "description": "YemenScan Coverage Ownership Matrix enforcing single primary scanner per capability family without phantom coverage",
+  "rules": {
+    "single_primary_scanner": true,
+    "disallow_duplicate_families": true,
+    "no_phantom_coverage": true
+  },
+  "capabilities": {
+    "known_cve_signature": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "cves",
+      "description": "Known CVE signature matching for disclosed public CVE identifiers"
+    },
+    "product_specific_vulnerability": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "vulnerabilities",
+      "description": "Targeted product and platform flaws (e.g. WordPress, Apache, Jenkins)"
+    },
+    "technology_version_check": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "technologies",
+      "description": "Technology version-specific exposure and vulnerability verification"
+    },
+    "exposed_configuration": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "exposures",
+      "description": "Known sensitive configuration files (.env, git-config, server-status)"
+    },
+    "exposed_panels": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "exposed-panels",
+      "description": "Known administrative and management web panels"
+    },
+    "backup_file_discovery": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "backups",
+      "description": "Known archive and database backup files on web roots"
+    },
+    "safe_signature_based_checks": {
+      "primary": "nuclei",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "category": "http",
+      "description": "Passive pattern and matcher verification for known components"
+    },
+    "web_headers": {
+      "primary": "wapiti",
+      "module": "http_headers",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Generic HTTP security headers evaluation (HSTS, X-Frame-Options, X-Content-Type-Options)"
+    },
+    "csp_posture": {
+      "primary": "wapiti",
+      "module": "csp",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Content Security Policy directive and structure analysis"
+    },
+    "cookie_security": {
+      "primary": "wapiti",
+      "module": "cookieflags",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Session cookie flags posture (Secure, HttpOnly, SameSite)"
+    },
+    "runtime_information_disclosure": {
+      "primary": "wapiti",
+      "module": "information_disclosure",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Dynamic server errors and banner leakage discovered during crawling"
+    },
+    "stacktrace_disclosure": {
+      "primary": "wapiti",
+      "module": "stacktrace_disclosure",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Runtime exception stack trace disclosures during crawl and form submission"
+    },
+    "https_redirection": {
+      "primary": "wapiti",
+      "module": "https_redirect",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Verification that plaintext HTTP requests are securely redirected to HTTPS"
+    },
+    "inconsistent_redirection": {
+      "primary": "wapiti",
+      "module": "inconsistent_redirection",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Inconsistent redirection patterns across requests and endpoints"
+    },
+    "cleartext_password_submission": {
+      "primary": "wapiti",
+      "module": "unsecure_password",
+      "profile": "safe",
+      "coverage_status": "covered_default",
+      "description": "Forms submitting credentials/passwords over unencrypted HTTP (passive inspection)"
+    },
+    "csrf": {
+      "primary": "wapiti",
+      "module": "csrf",
+      "profile": "dast_light",
+      "coverage_status": "covered_optional",
+      "description": "Forms missing Cross-Site Request Forgery protections and tokens (optional review profile)"
+    },
+    "open_redirect": {
+      "primary": "wapiti",
+      "module": "redirect",
+      "profile": "dast_light",
+      "coverage_status": "covered_optional",
+      "description": "Crawler-discovered open redirection parameter manipulation (optional review profile)"
+    },
+    "subdomain_takeover": {
+      "primary": "none",
+      "module": "takeover",
+      "profile": "none",
+      "coverage_status": "not_covered_default",
+      "description": "Subdomain dangling CNAME takeover detection. Not covered in default scan: upstream Subfinder/Naabu only discover hosts/ports; Nuclei runtime bundle excludes active takeover probes to prevent false positives and load; Wapiti takeover is redundant and disabled.",
+      "reason": "Not covered in default scan; active takeover probing excluded to ensure non-invasive operation"
+    },
+    "log4shell": {
+      "primary": "none",
+      "module": "log4shell",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "CVE-2021-44228 Log4Shell active payload injection excluded from safe default policy",
+      "reason": "Active OAST/RCE probe excluded from default safe scan policy"
+    },
+    "shellshock": {
+      "primary": "none",
+      "module": "shellshock",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Shellshock active header payload injection excluded from safe default policy",
+      "reason": "Active RCE probe excluded from default safe scan policy"
+    },
+    "spring4shell": {
+      "primary": "none",
+      "module": "spring4shell",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Spring4Shell active classLoader payload injection excluded from safe default policy",
+      "reason": "Active classLoader payload probe excluded from default safe scan policy"
+    },
+    "sql_injection": {
+      "primary": "none",
+      "module": "sql",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active error-based and boolean-based SQL injection excluded from safe default policy",
+      "reason": "Active injection attack excluded from default safe scan policy"
+    },
+    "command_execution": {
+      "primary": "none",
+      "module": "exec",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active OS command and code execution fuzzing excluded from safe default policy",
+      "reason": "Active code execution attack excluded from default safe scan policy"
+    },
+    "file_inclusion": {
+      "primary": "none",
+      "module": "file",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active path traversal and local/remote file inclusion excluded from safe default policy",
+      "reason": "Active path traversal attack excluded from default safe scan policy"
+    },
+    "cross_site_scripting": {
+      "primary": "none",
+      "module": "xss",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active reflected and stored XSS payload injection excluded from safe default policy",
+      "reason": "Active script injection attack excluded from default safe scan policy"
+    },
+    "server_side_request_forgery": {
+      "primary": "none",
+      "module": "ssrf",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active SSRF out-of-band injection excluded from safe default policy",
+      "reason": "Active SSRF injection attack excluded from default safe scan policy"
+    },
+    "xml_external_entity": {
+      "primary": "none",
+      "module": "xxe",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active XML External Entity injection excluded from safe default policy",
+      "reason": "Active XXE injection attack excluded from default safe scan policy"
+    },
+    "file_upload": {
+      "primary": "none",
+      "module": "upload",
+      "profile": "none",
+      "coverage_status": "disabled_safety",
+      "description": "Active arbitrary file upload fuzzing excluded from safe default policy",
+      "reason": "Active file upload attack excluded from default safe scan policy"
+    }
+  },
+  "wapiti_disabled_redundant_modules": [
+    {
+      "module": "cms",
+      "superseded_by": "httpx",
+      "reason": "Live technology and CMS fingerprinting already executed by httpx"
+    },
+    {
+      "module": "wapp",
+      "superseded_by": "httpx",
+      "reason": "Wappalyzer tech detection already executed by httpx"
+    },
+    {
+      "module": "htp",
+      "superseded_by": "httpx",
+      "reason": "HashThePlanet tech identification already executed by httpx"
+    },
+    {
+      "module": "buster",
+      "superseded_by": "kiterunner",
+      "reason": "Path and API route discovery already executed by Kiterunner"
+    },
+    {
+      "module": "nikto",
+      "superseded_by": "nuclei",
+      "reason": "Known script and signature scanning owned by Nuclei"
+    },
+    {
+      "module": "backup",
+      "superseded_by": "nuclei",
+      "reason": "Known backup file discovery owned by Nuclei"
+    },
+    {
+      "module": "network_device",
+      "superseded_by": "nuclei",
+      "reason": "Network device panel detection owned by Nuclei"
+    },
+    {
+      "module": "takeover",
+      "superseded_by": "none",
+      "reason": "Subdomain discovery is done by Subfinder/Naabu; active takeover probes excluded for safety and precision"
+    }
+  ],
+  "wapiti_active_attack_modules_review": [
+    "exec",
+    "upload",
+    "permanentxss",
+    "brute_login_form",
+    "timesql",
+    "sql",
+    "xss",
+    "ssrf",
+    "xxe",
+    "file",
+    "crlf",
+    "ldap",
+    "htaccess",
+    "log4shell",
+    "shellshock",
+    "spring4shell"
+  ]
+}

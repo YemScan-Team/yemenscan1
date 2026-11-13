@@ -1,0 +1,48 @@
+{
+  "templates_path": "/opt/nuclei-templates",
+  "templates_version": "v10.5.1",
+  "templates_commit": "79fb682760ab3d5b0e22afbb44709353cbebf023",
+  "templates_tree_checksum": "8a8a34ea672e2ee3674092112e5e6934309fc9aa",
+  "signature_verification": "enforced_dut",
+  "protocol_scope": [
+    "http"
+  ],
+  "severities": [
+    "medium",
+    "high",
+    "critical"
+  ],
+  "excluded_tags": [
+    "dos",
+    "fuzz",
+    "bruteforce",
+    "intrusive",
+    "local"
+  ],
+  "flags": [
+    "-severity",
+    "medium,high,critical",
+    "-pt",
+    "http",
+    "-etags",
+    "dos,fuzz,bruteforce,intrusive,local",
+    "-dut",
+    "-ni",
+    "-lna",
+    "-iv",
+    "4",
+    "-rl",
+    "30",
+    "-c",
+    "10",
+    "-bs",
+    "10",
+    "-timeout",
+    "8",
+    "-retries",
+    "1",
+    "-duc",
+    "-nc",
+    "-silent"
+  ]
+}

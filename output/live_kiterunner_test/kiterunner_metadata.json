@@ -1,0 +1,29 @@
+{
+  "tool": "kiterunner",
+  "status": "completed",
+  "input_count": 1,
+  "raw_event_count": 2,
+  "parsed_event_count": 2,
+  "invalid_event_count": 0,
+  "response_record_count": 2,
+  "valid_count": 1,
+  "invalid_response_count": 0,
+  "duplicate_count": 1,
+  "candidate_count": 1,
+  "unique_origin_count": 1,
+  "methods": {
+    "GET": 1
+  },
+  "status_code_counts": {
+    "403": 1
+  },
+  "engine": "kiterunner",
+  "upstream_version": "v1.0.2",
+  "upstream_commit": "e7a7fa6",
+  "build_variant": "yemscan1",
+  "patches": [
+    "remove-default-x-forwarded-for"
+  ],
+  "wordlist": "custom_wordlist.kite",
+  "wordlist_sha256": "75ecedb18a01e658f365d29d9515e0771165715b3d4e8504b5ec04c0e0bd4552"
+}

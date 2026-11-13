@@ -3,6 +3,7 @@ import subprocess
 import shutil
 import threading
 import uuid
+import atexit
 from typing import List, Tuple, Optional, Dict, Set
 
 # Active processes and containers tracking per scan_id (Sets allow concurrent tools per scan without collision)
@@ -10,6 +11,34 @@ _ACTIVE_PROCS: Dict[str, Set[subprocess.Popen]] = {}
 _ACTIVE_CONTAINERS: Dict[str, Set[str]] = {}
 _CANCELLED_SCANS: Set[str] = set()
 _LOCK = threading.Lock()
+
+def get_docker_cmd() -> str:
+    """Finds the absolute path to docker executable, prioritizing docker.exe on Windows."""
+    for p in [
+        r"C:\Program Files\Docker\Docker\resources\bin\docker.exe",
+        shutil.which("docker.exe"),
+        shutil.which("docker")
+    ]:
+        if p and os.path.exists(p) and not os.path.isdir(p):
+            return p
+    return "docker"
+
+def _cleanup_all_active_containers():
+    """Cleanup all tracked active docker containers on interpreter exit to prevent orphans."""
+    with _LOCK:
+        for scan_id, containers in list(_ACTIVE_CONTAINERS.items()):
+            for container_name in list(containers):
+                try:
+                    subprocess.run(
+                        [get_docker_cmd(), "rm", "-f", container_name],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=5
+                    )
+                except Exception:
+                    pass
+
+atexit.register(_cleanup_all_active_containers)
 
 class ScanCancelledException(Exception):
     """Raised when a scan has been cancelled by the user."""
@@ -33,7 +62,7 @@ def mark_scan_cancelled(scan_id: str) -> None:
         for container_name in containers:
             try:
                 subprocess.run(
-                    ["docker", "rm", "-f", container_name],
+                    [get_docker_cmd(), "rm", "-f", container_name],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                     timeout=5
@@ -83,32 +112,24 @@ def is_docker_available() -> bool:
         return True
 
     now = time.time()
-    if _DOCKER_AVAILABLE_CACHE is not None and (now - _DOCKER_CACHE_TIME) < 60:
+    if _DOCKER_AVAILABLE_CACHE is not None and (now - _DOCKER_CACHE_TIME) < 120:
         return _DOCKER_AVAILABLE_CACHE
 
     try:
         # Step 1: Quick Docker daemon ping
         res = subprocess.run(
-            ["docker", "info"],
+            [get_docker_cmd(), "info"],
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-            timeout=2.5
+            timeout=5.0
         )
         if res.returncode != 0:
             _DOCKER_AVAILABLE_CACHE = False
             _DOCKER_CACHE_TIME = now
             return False
 
-        # Step 2: Canary test - verify docker run executes without hanging in Created state
-        canary = subprocess.run(
-            ["docker", "run", "--rm", "alpine:latest", "true"],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            timeout=2.5
-        )
-        _DOCKER_AVAILABLE_CACHE = (canary.returncode == 0)
+        _DOCKER_AVAILABLE_CACHE = True
     except Exception:
         _DOCKER_AVAILABLE_CACHE = False
 
@@ -133,11 +154,12 @@ def run_docker_tool(
         raise ScanCancelledException(f"Scan {scan_id} has been cancelled by user.")
 
     # 1. Native/Bundled Tool Execution Check:
-    # If the tool binary (subfinder, naabu, httpx, nuclei) is installed in PATH,
-    # run it directly for maximum performance and avoid container overhead.
+    # Docker containers are the primary execution mode (isolated & reproducible).
+    # If Docker is unavailable (or PREFER_LOCAL_TOOLS=true is explicitly set),
+    # fall back to local binary if present in PATH.
     tool_binary = image.split("/")[-1].split(":")[0]
     local_bin = shutil.which(tool_binary) or shutil.which(f"{tool_binary}.exe")
-    prefer_local = os.getenv("PREFER_LOCAL_TOOLS", "true").lower() in ("true", "1", "yes")
+    prefer_local = os.getenv("PREFER_LOCAL_TOOLS", "false").lower() in ("true", "1", "yes")
 
     if local_bin and (prefer_local or not is_docker_available()):
         local_args = []
@@ -154,7 +176,7 @@ def run_docker_tool(
         return False, "Docker is not available or unable to run containers on this host system."
 
     vol_path = get_docker_volume_path(volume_dir)
-    cmd = ["docker", "run", "--rm"]
+    cmd = [get_docker_cmd(), "run", "--rm"]
     
     # Generate a unique container name with random hex suffix to prevent Docker name collisions
     container_suffix = uuid.uuid4().hex[:6]
@@ -194,13 +216,18 @@ def run_docker_tool(
             return True, stdout
         else:
             return False, f"Process returned code {proc.returncode}: {stderr}"
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as te:
         if proc:
             proc.kill()
         try:
-            subprocess.run(["docker", "rm", "-f", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            subprocess.run([get_docker_cmd(), "rm", "-f", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
         except Exception:
             pass
+        partial_stdout = te.output or ""
+        if isinstance(partial_stdout, bytes):
+            partial_stdout = partial_stdout.decode("utf-8", errors="replace")
+        if partial_stdout and len(partial_stdout.strip()) > 0:
+            return True, partial_stdout
         return False, f"Tool execution timed out after {timeout} seconds"
     except ScanCancelledException:
         if proc:
@@ -209,7 +236,7 @@ def run_docker_tool(
             except Exception:
                 pass
         try:
-            subprocess.run(["docker", "rm", "-f", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            subprocess.run([get_docker_cmd(), "rm", "-f", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
         except Exception:
             pass
         raise

@@ -1,0 +1,236 @@
+--- a/wapitiCore/parsers/commandline.py
++++ b/wapitiCore/parsers/commandline.py
+@@ -264,6 +264,14 @@
+     )
+ 
+     parser.add_argument(
++        "--no-form-submission",
++        action="store_true",
++        default=False,
++        dest="no_form_submission",
++        help="Disallow form submissions and non-idempotent HTTP methods during crawl (Safe/Read-only Profile)"
++    )
++
++    parser.add_argument(
+         "--resume-crawl",
+         action="store_true",
+         help="Resume the scanning process (if stopped) even if some attacks were previously performed"
+--- a/wapitiCore/net/classes.py
++++ b/wapitiCore/net/classes.py
+@@ -61,3 +61,5 @@
+     stream: bool = False
+     headers: Optional[dict] = None
+     drop_cookies: bool = False
++    allow_form_submission: bool = True
++    allowed_methods: Optional[set] = None
+--- a/wapitiCore/net/crawler.py
++++ b/wapitiCore/net/crawler.py
+@@ -175,7 +175,10 @@
+         )
+ 
+         client.max_redirects = 5
+-        return cls(configuration.base_request, client, configuration.timeout)
++        crawler = cls(configuration.base_request, client, configuration.timeout)
++        crawler.allow_form_submission = getattr(configuration, "allow_form_submission", True)
++        crawler.allowed_methods = getattr(configuration, "allowed_methods", None)
++        return crawler
+ 
+     @staticmethod
+     def _fix_proxy_url(proxy: str) -> Optional[str]:
+@@ -333,6 +336,14 @@
+         else:
+             post_params = None
+ 
++        method_str = (method or "GET").upper()
++        if hasattr(self, "allowed_methods") and self.allowed_methods is not None:
++            if method_str not in self.allowed_methods:
++                raise RuntimeError(f"HTTP method {method_str} blocked by safe crawl policy")
++        if hasattr(self, "allow_form_submission") and not self.allow_form_submission:
++            if post_params or file_params or content:
++                raise RuntimeError("Form submission / request body blocked by safe crawl policy")
++
+         try:
+             final_httpx_request = self._client.build_request(
+                 method,
+@@ -374,6 +385,14 @@
+             stream: bool = False,
+             timeout: float = None
+     ) -> Response:
++        method = (request.method or "GET").upper()
++        if hasattr(self, "allowed_methods") and self.allowed_methods is not None:
++            if method not in self.allowed_methods:
++                raise RuntimeError(f"HTTP method {method} blocked by safe crawl policy")
++        if hasattr(self, "allow_form_submission") and not self.allow_form_submission:
++            if getattr(request, "post_params", None) or getattr(request, "file_params", None):
++                raise RuntimeError("Form submission / request body blocked by safe crawl policy")
++
+         if request.method == "GET":
+             return await self.async_get(
+                 request,
+--- a/wapitiCore/net/explorer.py
++++ b/wapitiCore/net/explorer.py
+@@ -125,6 +125,18 @@
+         self._stopped = stop_event
+ 
+         self._max_tasks = min(parallelism, 32)
++        self.allow_form_submission = getattr(crawler_configuration, "allow_form_submission", True)
++        self.allowed_methods = getattr(crawler_configuration, "allowed_methods", None)
++        self.telemetry_tracker = None
++        self.blocked_crawler_request_count = 0
++        self.blocked_method_counts = defaultdict(int)
++
++    def record_blocked_request(self, method: str):
++        self.blocked_crawler_request_count += 1
++        m = (method or "UNKNOWN").upper()
++        self.blocked_method_counts[m] += 1
++        if self.telemetry_tracker:
++            self.telemetry_tracker(m)
+ 
+     @property
+     def max_depth(self) -> int:
+@@ -247,6 +259,16 @@
+ 
+             for form in html.iter_forms():
+                 for form_request in form.to_requests():
++                    method = (form_request.method or "GET").upper()
++                    if (
++                        not self.allow_form_submission
++                        or (self.allowed_methods is not None and method not in self.allowed_methods)
++                        or form_request.post_params
++                        or form_request.file_params
++                    ):
++                        self.record_blocked_request(method)
++                        continue
++
+                     # TODO: apply bad_params filtering in form URLs
+                     if self._scope.check(form_request):
+                         if form_request.hostname not in self._hostnames:
+@@ -348,6 +370,17 @@
+ 
+             resource_url = request.url
+ 
++            method = (request.method or "GET").upper()
++            if self.allowed_methods is not None and method not in self.allowed_methods:
++                self.record_blocked_request(method)
++                logging.warning("[!] Method %s blocked by safe crawl guard: %s", method, resource_url)
++                return False, [], None
++
++            if not self.allow_form_submission and (request.post_params or request.file_params):
++                self.record_blocked_request(method)
++                logging.warning("[!] Form submission/body blocked by safe crawl guard: %s", resource_url)
++                return False, [], None
++
+             try:
+                 response: Response = await self._crawler.async_send(request, stream=True)
+             except (TypeError, UnicodeDecodeError) as exception:
+--- a/wapitiCore/controller/wapiti.py
++++ b/wapitiCore/controller/wapiti.py
+@@ -95,6 +95,10 @@
+         self._headless_mode = "no"
+         self._wait_time = 2.
+         self._buffer = []
++        self.allow_form_submission = True
++        self.allowed_methods = None
++        self.blocked_crawler_request_count = 0
++        self.blocked_method_counts = {}
+ 
+         if session_dir:
+             SqlPersister.CRAWLER_DATA_DIR = session_dir
+@@ -120,6 +124,29 @@
+             verbosity=self.verbose
+         )
+         self._passive_scanner = PassiveScanner(persister=self.persister)
++
++    def set_safe_crawl(self, no_form_submission: bool = True):
++        self.allow_form_submission = not no_form_submission
++        if no_form_submission:
++            self.allowed_methods = {"GET", "HEAD"}
++        else:
++            self.allowed_methods = None
++        self.crawler_configuration.allow_form_submission = self.allow_form_submission
++        self.crawler_configuration.allowed_methods = self.allowed_methods
++
++    def record_blocked_request(self, method: str):
++        self.blocked_crawler_request_count += 1
++        m = (method or "UNKNOWN").upper()
++        self.blocked_method_counts[m] = self.blocked_method_counts.get(m, 0) + 1
++
++    def get_crawl_telemetry(self):
++        return {
++            "crawl_policy": "read_only" if not self.allow_form_submission else "standard",
++            "allowed_http_methods": sorted(list(self.allowed_methods)) if self.allowed_methods else ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
++            "form_submission_enabled": self.allow_form_submission,
++            "blocked_crawler_request_count": self.blocked_crawler_request_count,
++            "blocked_method_counts": self.blocked_method_counts
++        }
+ 
+     def refresh_logging(self):
+         verbosity_levels = {
+@@ -156,6 +183,7 @@
+         crawled_pages = await self.persister.get_crawled_paths(self.detailed_report_level) \
+           if self.detailed_report_level in (1, 2) else []
+ 
++        crawl_telemetry = self.get_crawl_telemetry()
+         self.report_gen.set_report_info(
+             target=self.base_request.url,
+             scope=self.target_scope.name,
+@@ -164,7 +192,8 @@
+             auth=self._auth_state,
+             crawled_pages=crawled_pages,
+             crawled_pages_nbr=await self.count_resources(),
+-            detailed_report_level=self.detailed_report_level
++            detailed_report_level=self.detailed_report_level,
++            **crawl_telemetry
+         )
+ 
+         self.report_gen.set_suppressed_findings(await self.persister.get_suppressed_findings())
+@@ -242,6 +271,9 @@
+             explorer.max_requests_per_depth = self._max_links_per_page
+             explorer.forbidden_parameters = self._bad_params
+             explorer.qs_limit = SCAN_FORCE_VALUES[self._scan_force]
++            explorer.allow_form_submission = self.allow_form_submission
++            explorer.allowed_methods = self.allowed_methods
++            explorer.telemetry_tracker = self.record_blocked_request
+             explorer.load_saved_state(self.persister.output_file[:-2] + "pkl")
+ 
+             self._buffer = []
+--- a/wapitiCore/report/reportgenerator.py
++++ b/wapitiCore/report/reportgenerator.py
+@@ -57,7 +57,8 @@
+         auth,
+         crawled_pages: list,
+         crawled_pages_nbr: int,
+-        detailed_report_level: int
++        detailed_report_level: int,
++        **extra_infos
+     ):
+         """Set the information about the scan"""
+         self._infos["target"] = target
+@@ -70,6 +71,8 @@
+             self._infos["crawled_pages"] = crawled_pages
+         self._infos["detailed_report_level"] = detailed_report_level
+         self._date = date
++        for k, v in extra_infos.items():
++            self._infos[k] = v
+ 
+     @property
+     def scan_date(self):
+--- a/wapitiCore/main/wapiti.py
++++ b/wapitiCore/main/wapiti.py
+@@ -277,6 +277,16 @@
+ 
+     wap = Wapiti(base_request, scope=args.scope, session_dir=args.store_session, config_dir=args.store_config)
+ 
++    no_form_sub = (
++        getattr(args, "no_form_submission", False)
++        or os.getenv("WAPITI_NO_FORM_SUBMISSION") == "1"
++        or os.getenv("WAPITI_SAFE_CRAWL") == "1"
++    )
++    if no_form_sub:
++        wap.set_safe_crawl(True)
++    else:
++        wap.set_safe_crawl(False)
++
+     await configure_wapiti_basic_settings(wap, args)
+     print_easter_eggs()
+ 

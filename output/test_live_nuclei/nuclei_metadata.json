@@ -1,0 +1,18 @@
+{
+  "tool": "nuclei",
+  "engine_version": "v3.11.1",
+  "engine_digest": "sha256:582d5546902e67052097cb2d07296c642d50a1afc5e44623cb038845df9a32eb",
+  "templates_version": "v10.5.1",
+  "templates_commit": "79fb682760ab3d5b0e22afbb44709353cbebf023",
+  "templates_checksum": "8a8a34ea672e2ee3674092112e5e6934309fc9aa",
+  "input_count": 1,
+  "raw_count": 0,
+  "valid_count": 0,
+  "invalid_count": 0,
+  "duplicate_count": 0,
+  "out_of_scope_count": 0,
+  "finding_count": 0,
+  "status": "failed",
+  "error": "Tool execution timed out after 720 seconds",
+  "execution_duration_seconds": 723.49
+}

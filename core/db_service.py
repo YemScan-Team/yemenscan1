@@ -641,7 +641,7 @@ def complete_scan_session(
         session.current_stage = current_stage or status
         if progress is not None:
             session.progress = progress
-        elif status in ("completed", "stopped", "failed"):
+        elif status in ("completed", "stopped", "failed", "partial"):
             session.progress = 100
 
         session.completed_at = now_utc
@@ -805,16 +805,23 @@ def ingest_scan_from_directory(
 
     target_domain = domain or status_data.get("target_domain") or "unknown-target.local"
 
-    # Accurately resolve status respecting manual stop or failure
+    # Accurately resolve status respecting manual stop, failure, partial, or completion
+    status_val = status_data.get("status") or ""
     stage = status_data.get("current_stage", "")
-    if stage in ("stopped", "failed"):
-        final_status = stage
-    elif status_data.get("status") in ("stopped", "failed"):
-        final_status = status_data.get("status")
-    elif status_data.get("is_completed"):
+    has_err = status_data.get("has_error", False)
+
+    if stage in ("stopped", "cancelled") or status_val in ("stopped", "cancelled"):
+        final_status = "stopped"
+    elif stage == "failed" or status_val == "failed":
+        final_status = "failed"
+    elif stage == "partial" or status_val == "partial":
+        final_status = "partial"
+    elif status_data.get("is_completed") and not has_err:
         final_status = "completed"
+    elif has_err:
+        final_status = "partial" if (active_urls or api_endpoints) else "failed"
     else:
-        final_status = stage or "completed"
+        final_status = status_val or stage or "completed"
 
     progress = status_data.get("progress", 100 if final_status in ("completed", "stopped") else 0)
     stats_summary = status_data.get("stats")

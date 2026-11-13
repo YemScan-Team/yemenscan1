@@ -1,0 +1,412 @@
+[
+  {
+    "finding_id": "d0f85ac2868dcd17",
+    "id": "WAP-CLEARTEX-D0F8",
+    "title": "Cleartext Submission of Password",
+    "severity": "HIGH",
+    "source_severity": "HIGH",
+    "category": "OWASP A02:2021-Cryptographic Failures",
+    "coverage_family": "cleartext_password_submission",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/login",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Cleartext Submission of Password",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/login",
+      "parameter": "password",
+      "http_request": "GET /login HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/login\"",
+      "info": "Password field password sent in clear text from URL http://host.docker.internal:8888/login"
+    },
+    "description": "Password field password sent in clear text from URL http://host.docker.internal:8888/login",
+    "remediation": "Ensure all credential and login forms submit strictly over HTTPS.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/login",
+        "parameter": "password",
+        "http_request": "GET /login HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/login\"",
+        "info": "Password field password sent in clear text from URL http://host.docker.internal:8888/login"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "cleartext_password_submission",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "1aa90dac404dc9fd",
+    "id": "WAP-CSP_POST-1AA9",
+    "title": "Content Security Policy (CSP) Misconfiguration",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "csp_posture",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Content Security Policy Configuration",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "CSP is not set for URL: http://host.docker.internal:8888/"
+    },
+    "description": "CSP is not set for URL: http://host.docker.internal:8888/",
+    "remediation": "Deploy Content-Security-Policy header restricting trusted origins and script execution.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "CSP is not set for URL: http://host.docker.internal:8888/"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "csp_posture",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "2d2eeb28c24601df",
+    "id": "WAP-WEB_HEAD-2D2E",
+    "title": "Clickjacking Protection",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Clickjacking Protection",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "X-Frame-Options is not set"
+    },
+    "description": "X-Frame-Options is not set",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "X-Frame-Options is not set"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "b9fb67de3bdd6769",
+    "id": "WAP-WEB_HEAD-B9FB",
+    "title": "MIME Type Confusion",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "MIME Type Confusion",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "X-Content-Type-Options is not set"
+    },
+    "description": "X-Content-Type-Options is not set",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "X-Content-Type-Options is not set"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "7f1b1a78097f391f",
+    "id": "WAP-COOKIE_S-7F1B",
+    "title": "Insecure Cookie Flag Configuration",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A07:2021-Identification and Authentication Failures",
+    "coverage_family": "cookie_security",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "HttpOnly Flag cookie",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'"
+    },
+    "description": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'",
+    "remediation": "Enforce Secure, HttpOnly, and SameSite flags on session and authentication cookies.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "HttpOnly flag is not set on the cookie 'sessionid' set at 'http://host.docker.internal:8888/'"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "cookie_security",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "293a4912d5b42e0e",
+    "id": "WAP-WEB_HEAD-293A",
+    "title": "Unencrypted Channels",
+    "severity": "MEDIUM",
+    "source_severity": "MEDIUM",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Unencrypted Channels",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS."
+    },
+    "description": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS.",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "Sensitive data (cookie in the response) was sent over an unencrypted HTTP connection to http://host.docker.internal:8888/. The server did not enforce HTTPS."
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "d16f89e8a635c11f",
+    "id": "WAP-WEB_HEAD-D16F",
+    "title": "Unencrypted Channels",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "web_headers",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/redirect",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Unencrypted Channels",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/redirect",
+      "parameter": "",
+      "http_request": "GET /redirect HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/redirect\"",
+      "info": "No HTTPS redirection for this host. All HTTP requests are served in clear text."
+    },
+    "description": "No HTTPS redirection for this host. All HTTP requests are served in clear text.",
+    "remediation": "Review server configuration and security headers.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/redirect",
+        "parameter": "",
+        "http_request": "GET /redirect HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/redirect\"",
+        "info": "No HTTPS redirection for this host. All HTTP requests are served in clear text."
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "web_headers",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "4ab59b5cfd1fd52e",
+    "id": "WAP-RUNTIME_-4AB5",
+    "title": "Runtime Information and Banner Disclosure",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "runtime_information_disclosure",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/debug/err",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Information Disclosure - Full Path",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/debug/err",
+      "parameter": "",
+      "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+      "info": "Response contains potential system path: /var/app/controller.py"
+    },
+    "description": "Response contains potential system path: /var/app/controller.py",
+    "remediation": "Mask or remove verbose Server, X-Powered-By, and runtime diagnostic banners.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/debug/err",
+        "parameter": "",
+        "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+        "info": "Response contains potential system path: /var/app/controller.py"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "runtime_information_disclosure",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "f95f7c4409c5c412",
+    "id": "WAP-COOKIE_S-F95F",
+    "title": "Insecure Cookie Flag Configuration",
+    "severity": "LOW",
+    "source_severity": "LOW",
+    "category": "OWASP A07:2021-Identification and Authentication Failures",
+    "coverage_family": "cookie_security",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Secure Flag cookie",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/",
+      "parameter": "",
+      "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "curl_command": "curl \"http://host.docker.internal:8888/\"",
+      "info": "Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'"
+    },
+    "description": "Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'",
+    "remediation": "Enforce Secure, HttpOnly, and SameSite flags on session and authentication cookies.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/",
+        "parameter": "",
+        "http_request": "GET / HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "curl_command": "curl \"http://host.docker.internal:8888/\"",
+        "info": "Secure flag is not set on the cookie: 'sessionid' set at 'http://host.docker.internal:8888/'"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "cookie_security",
+      "dast"
+    ]
+  },
+  {
+    "finding_id": "7ed9603981247a88",
+    "id": "WAP-STACKTRA-7ED9",
+    "title": "Application Stack Trace Disclosure",
+    "severity": "MEDIUM",
+    "source_severity": "MEDIUM",
+    "category": "OWASP A05:2021-Security Misconfiguration",
+    "coverage_family": "stacktrace_disclosure",
+    "target": "http://host.docker.internal:8888",
+    "url": "http://host.docker.internal:8888/debug/err",
+    "source": "Wapiti DAST",
+    "sources": [
+      "wapiti"
+    ],
+    "source_rule": "Stack Trace Disclosure",
+    "source_evidence": {
+      "method": "GET",
+      "path": "/debug/err",
+      "parameter": "",
+      "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+      "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+      "info": "Response discloses a Python stack trace or error message: Traceback (most recent call last):"
+    },
+    "description": "Response discloses a Python stack trace or error message: Traceback (most recent call last):",
+    "remediation": "Disable verbose error messages and stack traces in production environments.",
+    "evidence": [
+      {
+        "method": "GET",
+        "path": "/debug/err",
+        "parameter": "",
+        "http_request": "GET /debug/err HTTP/1.1\nhost: host.docker.internal:8888\nconnection: keep-alive\nuser-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0\naccept-language: en-US\naccept-encoding: gzip, deflate, br\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\ncookie: sessionid=controlled_test_token_98765",
+        "curl_command": "curl \"http://host.docker.internal:8888/debug/err\"",
+        "info": "Response discloses a Python stack trace or error message: Traceback (most recent call last):"
+      }
+    ],
+    "tags": [
+      "wapiti",
+      "stacktrace_disclosure",
+      "dast"
+    ]
+  }
+]

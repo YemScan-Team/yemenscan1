@@ -38,9 +38,11 @@ def create_scan_session(domain: str) -> str:
         "target_domain": domain,
         "created_at": datetime.now().isoformat(),
         "updated_at": datetime.now().isoformat(),
+        "status": "queued",
         "current_stage": "queued",
         "current_tool": "none",
         "progress_percentage": 0,
+        "tool_statuses": {},
         "stage_labels": {
             "phase1": "الاستكشاف وفحص المنافذ (Discovery & Port Scanning)",
             "phase2": "تحديد خدمات الويب واستكشاف الـ APIs (Web & API Probing)",
@@ -94,15 +96,18 @@ def get_status(scan_id: str) -> Optional[Dict[str, Any]]:
 
 def update_status(
     scan_id: str,
+    status: Optional[str] = None,
     stage: Optional[str] = None,
     tool: Optional[str] = None,
     progress: Optional[int] = None,
     log_message: Optional[str] = None,
     stats_update: Optional[Dict[str, Any]] = None,
+    tool_status: Optional[Dict[str, str]] = None,
     is_completed: Optional[bool] = None,
+    has_error: Optional[bool] = None,
     error: Optional[str] = None
 ) -> None:
-    """Updates session status file atomically and safely with lock."""
+    """Updates session status file atomically and safely with lock, preventing invalid overrides."""
     session_dir = get_session_dir(scan_id)
     status_file = os.path.join(session_dir, "status.json")
     
@@ -111,39 +116,62 @@ def update_status(
             return
         try:
             with open(status_file, "r", encoding="utf-8") as f:
-                status = json.load(f)
+                status_dict = json.load(f)
         except Exception:
             return
+
+        current_val = status_dict.get("status") or status_dict.get("current_stage")
+
+        # 1. Stopped/Cancelled protection: Once stopped, late callbacks must never reactivate or complete
+        if current_val in ("stopped", "cancelled"):
+            if status not in (None, "stopped", "cancelled") or stage not in (None, "stopped", "cancelled"):
+                return
+            if is_completed is not None and not is_completed:
+                return
+
+        # 2. Failed protection: Once failed, late callbacks must never mark it completed
+        if current_val == "failed" and (status == "completed" or stage == "completed" or (is_completed and not has_error and error is None)):
+            return
             
-        status["updated_at"] = datetime.now().isoformat()
+        status_dict["updated_at"] = datetime.now().isoformat()
         
+        if status is not None:
+            status_dict["status"] = status
         if stage is not None:
-            status["current_stage"] = stage
+            status_dict["current_stage"] = stage
         if tool is not None:
-            status["current_tool"] = tool
+            status_dict["current_tool"] = tool
+        if tool_status:
+            if "tool_statuses" not in status_dict:
+                status_dict["tool_statuses"] = {}
+            status_dict["tool_statuses"].update(tool_status)
         if progress is not None:
-            status["progress_percentage"] = max(0, min(100, progress))
+            status_dict["progress_percentage"] = max(0, min(100, progress))
         if log_message:
             timestamp_str = datetime.now().strftime("%H:%M:%S")
-            status["logs"].append(f"[{timestamp_str}] {log_message}")
+            status_dict["logs"].append(f"[{timestamp_str}] {log_message}")
         if stats_update:
             for k, v in stats_update.items():
                 if k == "vuln_by_severity" and isinstance(v, dict):
-                    status["stats"]["vuln_by_severity"].update(v)
+                    status_dict["stats"]["vuln_by_severity"].update(v)
                 else:
-                    status["stats"][k] = v
+                    status_dict["stats"][k] = v
         if is_completed is not None:
-            status["is_completed"] = is_completed
+            status_dict["is_completed"] = is_completed
+        if has_error is not None:
+            status_dict["has_error"] = has_error
         if error is not None:
-            status["has_error"] = True
-            status["error_message"] = error
+            status_dict["has_error"] = True
+            status_dict["error_message"] = error
+            if status is None and status_dict.get("status") not in ("stopped", "cancelled"):
+                status_dict["status"] = "failed"
             timestamp_str = datetime.now().strftime("%H:%M:%S")
-            status["logs"].append(f"[{timestamp_str}] خطأ: {error}")
+            status_dict["logs"].append(f"[{timestamp_str}] خطأ: {error}")
             
         temp_file = os.path.join(session_dir, f"status_{uuid.uuid4().hex[:4]}.tmp")
         try:
             with open(temp_file, "w", encoding="utf-8") as f:
-                json.dump(status, f, ensure_ascii=False, indent=2)
+                json.dump(status_dict, f, ensure_ascii=False, indent=2)
             os.replace(temp_file, status_file)
         except Exception:
             if os.path.exists(temp_file):
@@ -165,10 +193,12 @@ def list_all_scans() -> List[Dict[str, Any]]:
                     "scan_id": status["scan_id"],
                     "target_domain": status["target_domain"],
                     "created_at": status["created_at"],
-                    "current_stage": status["current_stage"],
-                    "progress": status["progress_percentage"],
-                    "is_completed": status["is_completed"],
-                    "stats": status["stats"]
+                    "status": status.get("status") or status.get("current_stage"),
+                    "current_stage": status.get("current_stage"),
+                    "progress": status.get("progress_percentage", 0),
+                    "is_completed": status.get("is_completed", False),
+                    "has_error": status.get("has_error", False),
+                    "stats": status.get("stats", {})
                 })
     # Sort scans descending by creation time
     scans.sort(key=lambda x: x.get("created_at", ""), reverse=True)
@@ -183,6 +213,7 @@ def stop_scan_session(scan_id: str) -> bool:
     mark_scan_cancelled(scan_id)
     update_status(
         scan_id,
+        status="stopped",
         stage="stopped",
         tool="none",
         is_completed=True,

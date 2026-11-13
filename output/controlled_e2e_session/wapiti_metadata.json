@@ -1,0 +1,75 @@
+{
+  "engine": "wapiti",
+  "tool": "wapiti",
+  "version": "3.3.2",
+  "build_variant": "yemscan-safe1",
+  "patches": [
+    "no-form-submission-safe-profile"
+  ],
+  "docker_image": "yemscan/wapiti:3.3.2",
+  "image_id": "sha256:611a8feb8521736d9b91a5776db861323b89ae401909683476c65f239f0dace1",
+  "repository_digest": null,
+  "build_reproducibility": {
+    "base_image_pinned": true,
+    "python_dependencies_locked": true
+  },
+  "profile": "safe",
+  "crawl_policy": "read_only",
+  "allowed_http_methods": [
+    "GET",
+    "HEAD"
+  ],
+  "form_submission_enabled": false,
+  "blocked_crawler_request_count": 1,
+  "blocked_method_counts": {
+    "POST": 1
+  },
+  "modules_executed": [
+    "http_headers",
+    "csp",
+    "cookieflags",
+    "information_disclosure",
+    "stacktrace_disclosure",
+    "https_redirect",
+    "inconsistent_redirection",
+    "unsecure_password"
+  ],
+  "modules_disabled_redundant": [
+    "cms",
+    "wapp",
+    "htp",
+    "buster",
+    "nikto",
+    "backup",
+    "network_device",
+    "takeover"
+  ],
+  "modules_excluded_review": [
+    "exec",
+    "upload",
+    "permanentxss",
+    "brute_login_form",
+    "timesql",
+    "sql",
+    "xss",
+    "ssrf",
+    "xxe",
+    "file",
+    "crlf",
+    "ldap",
+    "htaccess",
+    "log4shell",
+    "shellshock",
+    "spring4shell"
+  ],
+  "verify_ssl": 1,
+  "targets_scanned": [
+    "http://host.docker.internal:8888"
+  ],
+  "max_active_security_scanners_per_origin": 1,
+  "sequential_execution": true,
+  "status": "completed",
+  "raw_count": 10,
+  "finding_count": 10,
+  "execution_duration_seconds": 3.1
+}

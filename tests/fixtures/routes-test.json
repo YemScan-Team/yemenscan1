@@ -1,0 +1,36 @@
+[
+  {
+    "ksuid": "0cc39f78f36dbe7fe7ea94c0f2687d269d728f96",
+    "url": "testserver.local",
+    "paths": {
+      "/api/health": {
+        "get": {
+          "description": "Health check endpoint",
+          "operationId": "getHealth"
+        }
+      },
+      "/api/users": {
+        "get": {
+          "description": "List users",
+          "operationId": "getUsers"
+        },
+        "post": {
+          "description": "Create user",
+          "operationId": "createUser"
+        }
+      },
+      "/random": {
+        "get": {
+          "description": "Random endpoint",
+          "operationId": "getRandom"
+        }
+      },
+      "/api/notfound": {
+        "get": {
+          "description": "Not found test route",
+          "operationId": "getNotFound"
+        }
+      }
+    }
+  }
+]
