@@ -1,0 +1,2419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YemenScan - منظومة الفحص الأمني السحابي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-card: #131b2e;
+            --bg-card-hover: #1c2742;
+            --border-color: #233154;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --critical: #ef4444;
+            --high: #f97316;
+            --medium: #f59e0b;
+            --low: #10b981;
+            --info: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Scan Box */
+        .scan-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .scan-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .scan-input {
+            flex: 1;
+            min-width: 280px;
+            background-color: #0b1120;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 18px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .scan-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.25);
+        }
+
+        .scan-btn {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .scan-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Progress Card */
+        .progress-box {
+            margin-top: 1.25rem;
+            display: none;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            background-color: #1e293b;
+            border-radius: 999px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--accent-cyan), #3b82f6);
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            transition: width 0.4s ease;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: #3b82f6;
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .metric-data h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .metric-data p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Tabs */
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background-color: #1e293b;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--accent-cyan);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Table & Lists */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card-table {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #0f172a;
+            padding: 14px 18px;
+            color: var(--text-muted);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        tr:hover td {
+            background-color: var(--bg-card-hover);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge-critical { background-color: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+        .badge-high { background-color: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid #f97316; }
+        .badge-medium { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+        .badge-low { background-color: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+        .badge-info { background-color: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid #64748b; }
+
+        .cvss-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            font-family: monospace;
+            border: 1px solid transparent;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .cvss-pill-critical { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border-color: #ef4444; }
+        .cvss-pill-high { background: rgba(249, 115, 22, 0.25); color: #fdba74; border-color: #f97316; }
+        .cvss-pill-medium { background: rgba(245, 158, 11, 0.25); color: #fde047; border-color: #f59e0b; }
+        .cvss-pill-low { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; border-color: #10b981; }
+        .cvss-pill-none { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border-color: #64748b; }
+
+        .log-box {
+            background-color: #050811;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            height: 320px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .remediation-box {
+            background-color: rgba(16, 185, 129, 0.08);
+            border-right: 4px solid var(--low);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #d1fae5;
+        }
+
+        .empty-state {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            background-color: #0b1120;
+        }
+
+        /* AI Report Styling */
+        .ai-report-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .ai-report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Two Dedicated Export Buttons Styling */
+        .export-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+        }
+
+        .export-executive {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border: 1px solid #38bdf8 !important;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+        }
+
+        .export-executive:hover {
+            box-shadow: 0 6px 22px rgba(56, 189, 248, 0.55);
+            background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+        }
+
+        .export-technical {
+            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            border: 1px solid #a855f7 !important;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+
+        .export-technical:hover {
+            box-shadow: 0 6px 22px rgba(168, 85, 247, 0.55);
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
+            border: 1px solid #f87171 !important;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35) !important;
+        }
+
+        .stop-btn:hover {
+            box-shadow: 0 6px 22px rgba(239, 68, 68, 0.6) !important;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+        }
+
+        .stop-badge-btn {
+            background: rgba(239, 68, 68, 0.18);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stop-badge-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .type-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .type-toggle-btn.active {
+            background: #1e293b;
+            color: #38bdf8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .type-toggle-btn:hover:not(.active) {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .ai-report-content {
+            line-height: 1.8;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .ai-report-content h1, .ai-report-content h2, .ai-report-content h3 {
+            color: #38bdf8;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .ai-report-content h1 { font-size: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        .ai-report-content h2 { font-size: 1.2rem; color: #818cf8; }
+        .ai-report-content h3 { font-size: 1.05rem; color: #38bdf8; }
+
+        .ai-report-content p {
+            margin-bottom: 1rem;
+        }
+
+        .ai-report-content ul, .ai-report-content ol {
+            margin-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-report-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* BiDi Code Isolation and Wrapping for RTL Context */
+        pre,
+        code,
+        .markdown-body pre,
+        .ai-report-content pre,
+        .ltr-code-block {
+            font-family: Consolas, Monaco, 'Courier New', monospace !important;
+        }
+
+        pre,
+        .markdown-body pre,
+        .ai-report-content pre,
+        .ltr-code-block {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: isolate !important;
+            background-color: #050811 !important;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 1rem 0;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            word-break: normal !important;
+            box-sizing: border-box;
+            max-width: 100%;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        :not(pre) > code,
+        .ai-report-content :not(pre) > code,
+        .ltr-inline-code {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: isolate !important;
+            display: inline-block;
+            vertical-align: baseline;
+            background: rgba(15, 23, 42, 0.85);
+            color: #38bdf8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            font-size: 0.88em;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        pre code,
+        .markdown-body pre code,
+        .ai-report-content pre code,
+        .ltr-code-block .ltr-code {
+            display: block !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            color: #34d399 !important;
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: isolate !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            word-break: normal !important;
+        }
+
+        .ai-report-content table {
+            margin: 1.25rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .ai-report-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+        }
+
+        .ai-loading-box {
+            display: none;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #38bdf8;
+        }
+
+        .ai-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(56, 189, 248, 0.2);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* =========================================================
+           Scoped Canvas Styling for html2pdf Direct PDF Generation
+           Eliminates dark-mode bleeding into the exported PDF
+           ========================================================= */
+        .pdf-export-wrapper {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            font-family: 'Cairo', sans-serif !important;
+            box-sizing: border-box !important;
+            direction: rtl !important;
+            text-align: right !important;
+        }
+
+        .pdf-export-wrapper * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            box-sizing: border-box !important;
+        }
+
+        .pdf-export-wrapper h1,
+        .pdf-export-wrapper h2,
+        .pdf-export-wrapper h3 {
+            color: #0f172a !important;
+            break-after: avoid !important;
+            page-break-after: avoid !important;
+        }
+
+        .pdf-export-wrapper h1 {
+            font-size: 15pt !important;
+            border-bottom: 2px solid #0284c7 !important;
+            padding-bottom: 5px !important;
+            margin-top: 16px !important;
+            margin-bottom: 10px !important;
+        }
+
+        .pdf-export-wrapper h2 {
+            font-size: 13pt !important;
+            color: #0369a1 !important;
+            margin-top: 14px !important;
+            margin-bottom: 8px !important;
+        }
+
+        .pdf-export-wrapper h3 {
+            font-size: 11pt !important;
+            color: #0f172a !important;
+            margin-top: 12px !important;
+            margin-bottom: 6px !important;
+        }
+
+        .pdf-export-wrapper p {
+            margin-bottom: 10px !important;
+            color: #1e293b !important;
+            line-height: 1.6 !important;
+        }
+
+        .pdf-export-wrapper ul,
+        .pdf-export-wrapper ol {
+            margin-right: 20px !important;
+            margin-bottom: 12px !important;
+        }
+
+        .pdf-export-wrapper li {
+            margin-bottom: 5px !important;
+            color: #1e293b !important;
+        }
+
+        .pdf-export-wrapper blockquote {
+            background: #f8fafc !important;
+            border-right: 4px solid #0284c7 !important;
+            padding: 10px 14px !important;
+            margin: 12px 0 !important;
+            color: #334155 !important;
+            border-radius: 4px !important;
+        }
+
+        .pdf-export-wrapper pre,
+        .pdf-export-wrapper .ai-report-content pre,
+        .pdf-export-wrapper .ltr-code-block {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 6px !important;
+            padding: 10px 14px !important;
+            margin: 10px 0 !important;
+            font-family: Consolas, Monaco, 'Courier New', monospace !important;
+            font-size: 8.5pt !important;
+            line-height: 1.45 !important;
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: isolate !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            max-width: 100% !important;
+        }
+
+        .pdf-export-wrapper pre code,
+        .pdf-export-wrapper .ai-report-content pre code,
+        .pdf-export-wrapper .ltr-code {
+            background: transparent !important;
+            color: #0f172a !important;
+            border: none !important;
+            padding: 0 !important;
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: isolate !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            display: block !important;
+        }
+
+        .pdf-export-wrapper :not(pre) > code,
+        .pdf-export-wrapper .ai-report-content :not(pre) > code,
+        .pdf-export-wrapper .ltr-inline-code {
+            background-color: #f1f5f9 !important;
+            color: #0284c7 !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 1px 6px !important;
+            border-radius: 4px !important;
+            font-family: Consolas, Monaco, monospace !important;
+            font-size: 8.5pt !important;
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: isolate !important;
+            display: inline-block !important;
+        }
+
+        .pdf-export-wrapper table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            border: 1px solid #cbd5e1 !important;
+            margin: 12px 0 !important;
+            font-size: 9pt !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .pdf-export-wrapper th,
+        .pdf-export-wrapper td {
+            border: 1px solid #cbd5e1 !important;
+            padding: 7px 10px !important;
+            text-align: right !important;
+        }
+
+        .pdf-export-wrapper th {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+            font-weight: bold !important;
+        }
+
+        .pdf-export-wrapper td {
+            color: #334155 !important;
+            background-color: #ffffff !important;
+        }
+
+        .print-only-header {
+            display: none;
+        }
+
+        /* =========================================================
+           Comprehensive Print / PDF Export Styling (@media print)
+           ========================================================= */
+        @media print {
+            .print-only-header {
+                display: block !important;
+                margin-bottom: 20px !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 15mm 12mm 15mm 12mm;
+            }
+
+            /* Force browser to preserve exact background colors & borders */
+            *, *::before, *::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            body {
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 10.5pt !important;
+                line-height: 1.6 !important;
+            }
+
+            /* Hide everything outside the AI Advisory Report */
+            header,
+            footer,
+            #fileProtocolBanner,
+            .scan-card,
+            .metrics-grid,
+            .tabs-nav,
+            #tab-vulns,
+            #tab-nuclei,
+            #tab-apis,
+            #tab-web,
+            #tab-discovery,
+            #tab-logs,
+            .ai-report-header button,
+            .ai-report-header .no-print,
+            .export-btn,
+            .type-toggle-btn,
+            #aiLoadingBox,
+            #aiEmptyBox {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            #tab-ai-report {
+                display: block !important;
+            }
+
+            .ai-report-container {
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+
+            .ai-report-header {
+                border-bottom: 2px solid #0284c7 !important;
+                padding-bottom: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .ai-report-header h2 {
+                color: #0369a1 !important;
+                font-size: 16pt !important;
+            }
+
+            .ai-report-header p {
+                color: #475569 !important;
+            }
+
+            .ai-badge {
+                background: #0284c7 !important;
+                color: #ffffff !important;
+                border: 1px solid #0369a1 !important;
+                box-shadow: none !important;
+                font-size: 8.5pt !important;
+            }
+
+            .ai-report-content {
+                color: #1e293b !important;
+            }
+
+            /* Avoid Orphaned Headings */
+            .ai-report-content h1,
+            .ai-report-content h2,
+            .ai-report-content h3 {
+                color: #0f172a !important;
+                break-after: avoid !important;
+                page-break-after: avoid !important;
+            }
+
+            .ai-report-content h1 {
+                font-size: 15pt !important;
+                border-bottom: 1.5px solid #0284c7 !important;
+                padding-bottom: 4px !important;
+                margin-top: 18pt !important;
+            }
+
+            .ai-report-content h2 {
+                font-size: 13pt !important;
+                color: #0369a1 !important;
+                margin-top: 16pt !important;
+            }
+
+            .ai-report-content h3 {
+                font-size: 11pt !important;
+                color: #0f172a !important;
+                margin-top: 12pt !important;
+            }
+
+            /* Code Blocks: Strict LTR, Left Align, Page Break Avoidance, & Word Wrap */
+            pre,
+            code,
+            .markdown-body pre,
+            .ltr-code-block,
+            .ai-report-content pre {
+                font-family: Consolas, Monaco, 'Courier New', monospace !important;
+            }
+
+            pre,
+            .markdown-body pre,
+            .ltr-code-block,
+            .ai-report-content pre {
+                direction: ltr !important;
+                text-align: left !important;
+                unicode-bidi: isolate !important;
+                background-color: #0f172a !important;
+                color: #38bdf8 !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 6px !important;
+                padding: 10px 14px !important;
+                margin: 12px 0 !important;
+                font-size: 8.5pt !important;
+                line-height: 1.45 !important;
+                
+                /* Prevent code block from splitting across printed pages */
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                -webkit-column-break-inside: avoid !important;
+                
+                /* Text Wrapping to prevent code from overflowing the PDF boundary */
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                white-space: pre-wrap !important;
+                word-break: normal !important;
+                overflow: hidden !important;
+                box-sizing: border-box !important;
+                max-width: 100% !important;
+            }
+
+            pre code,
+            .markdown-body pre code,
+            .ltr-code-block .ltr-code,
+            .ai-report-content pre code {
+                direction: ltr !important;
+                text-align: left !important;
+                unicode-bidi: isolate !important;
+                color: #34d399 !important;
+                background: transparent !important;
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                word-break: normal !important;
+                padding: 0 !important;
+                border: none !important;
+                display: block !important;
+            }
+
+            /* Inline Code: Prevent BiDi Flipping */
+            :not(pre) > code,
+            .ai-report-content :not(pre) > code,
+            .ltr-inline-code {
+                direction: ltr !important;
+                text-align: left !important;
+                unicode-bidi: isolate !important;
+                display: inline-block !important;
+                background-color: #f1f5f9 !important;
+                color: #0369a1 !important;
+                border: 1px solid #cbd5e1 !important;
+                padding: 1px 5px !important;
+                border-radius: 4px !important;
+                font-size: 8.5pt !important;
+                word-wrap: break-word !important;
+            }
+
+            /* Tables in Print: Prevent Split Rows */
+            .ai-report-content table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                margin: 14px 0 !important;
+                font-size: 9pt !important;
+            }
+
+            .ai-report-content th,
+            .ai-report-content td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 7px 10px !important;
+                color: #0f172a !important;
+            }
+
+            .ai-report-content th {
+                background-color: #f8fafc !important;
+                font-weight: bold !important;
+            }
+
+            .ai-report-content hr {
+                border-top: 1px solid #cbd5e1 !important;
+                margin: 14px 0 !important;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div id="fileProtocolBanner" style="display: none; background: linear-gradient(90deg, #d97706, #dc2626); color: #fff; padding: 10px 20px; text-align: center; font-weight: bold; font-size: 0.9rem; border-bottom: 2px solid #b45309;">
+        ⚠️ ملاحظة: تم فتح الصفحة كملف محلي. تم توجيه الاتصال تلقائياً إلى الخادم المحلي: <a href="http://127.0.0.1:8000" target="_blank" style="color: #fff; text-decoration: underline; margin-right: 8px;">http://127.0.0.1:8000</a> (انقر هنا لفتح الرابط المباشر للوحة التحكم)
+    </div>
+
+    <header>
+        <div class="logo-box">
+            <div class="logo-icon">🛡️</div>
+            <div class="logo-text">
+                <h1>YemenScan Engine</h1>
+                <p>منظومة الفحص الأمني السحابي واكتشاف الأصول (مشروع تخرج)</p>
+            </div>
+        </div>
+        <div>
+            <select id="scansHistory" class="scan-input" style="min-width: 240px; padding: 8px 14px;" onchange="loadSelectedScan()">
+                <option value="">-- الجلسات السابقة --</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Scan Launch Card -->
+        <div class="scan-card">
+            <h2 style="font-size: 1.15rem; margin-bottom: 12px; color: #38bdf8;">بدء فحص استطلاعي وأمني شامل جديد</h2>
+            <div class="scan-form">
+                <input type="text" id="targetDomain" class="scan-input" placeholder="أدخل النطاق المستهدف (مثال: example.com أو hackthebox.com)" onkeydown="if(event.key==='Enter') startScan()">
+                <button id="startScanBtn" class="scan-btn" onclick="startScan()">
+                    <span>🚀 إطلاق الفحص الأمني</span>
+                </button>
+                <button id="stopScanBtn" class="scan-btn stop-btn" onclick="stopCurrentScan()" style="display: none;">
+                    <span>🛑 إيقاف الفحص</span>
+                </button>
+            </div>
+
+            <div id="progressBox" class="progress-box">
+                <div class="progress-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span id="currentStatusText">جاري تهيئة خط الفحص الأمني...</span>
+                        <button id="progressStopBtn" class="stop-badge-btn" onclick="stopCurrentScan()" style="display: none;" title="إيقاف الفحص الجاري فوراً">🛑 إيقاف</button>
+                    </div>
+                    <span id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progressBarFill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric Counter Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon" style="color: #38bdf8; background: rgba(56, 189, 248, 0.1);">🌐</div>
+                <div class="metric-data">
+                    <h3 id="statSubdomains">0</h3>
+                    <p>النطاقات الفرعية (Subfinder)</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon" style="color: #818cf8; background: rgba(129, 140, 248, 0.1);">🔌</div>
+                <div class="metric-data">
+                    <h3 id="statPorts">0</h3>
+                    <p>المنافذ المفتوحة (Naabu)</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon" style="color: #34d399; background: rgba(52, 211, 153, 0.1);">💻</div>
+                <div class="metric-data">
+                    <h3 id="statLiveWeb">0</h3>
+                    <p>خوادم الويب الحية (HTTPX)</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">⚡</div>
+                <div class="metric-data">
+                    <h3 id="statApis">0</h3>
+                    <p>مسارات الـ APIs (Kiterunner)</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon" style="color: #f87171; background: rgba(248, 113, 113, 0.1);">🚨</div>
+                <div class="metric-data">
+                    <h3 id="statVulns">0</h3>
+                    <p>الثغرات المكتشفة (Nuclei/Wapiti)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('tab-vulns', this)">🚨 الثغرات الأمنية المكتشفة</button>
+            <button class="tab-btn" id="btn-tab-ai" onclick="switchTab('tab-ai-report', this)">🤖 تقرير الذكاء الاصطناعي (AI Advisory)</button>
+            <button class="tab-btn" onclick="switchTab('tab-nuclei', this)">🔬 فاحص Nuclei المستقل</button>
+            <button class="tab-btn" onclick="switchTab('tab-apis', this)">⚡ واجهات الـ APIs والمسارات المخفية</button>
+            <button class="tab-btn" onclick="switchTab('tab-web', this)">🌐 خدمات الويب والتقنيات</button>
+            <button class="tab-btn" onclick="switchTab('tab-discovery', this)">🔍 النطاقات الفرعية والمنافذ</button>
+            <button class="tab-btn" onclick="switchTab('tab-logs', this)">📜 سجل الأحداث المباشر</button>
+        </div>
+
+        <!-- Tab 1: Vulnerabilities -->
+        <div id="tab-vulns" class="tab-content active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+                <h3 style="color: #f87171; font-size: 1.05rem;">قائمة الثغرات المكتشفة الموحدة (Nuclei + Wapiti)</h3>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                    <button class="export-btn export-executive" onclick="openAiAndExport('executive')" title="توليد وتصدير تقرير تنفيذي موجه للإدارة العليا بصيغة PDF">
+                        <span>📑 PDF للإدارة</span>
+                    </button>
+                    <button class="export-btn export-technical" onclick="openAiAndExport('technical')" title="توليد وتصدير تقرير تقني مفصل للمطورين ومسؤولي الأنظمة بصيغة PDF">
+                        <span>🛠️ PDF تقني</span>
+                    </button>
+                    <button class="scan-btn" onclick="openAiTabAndGenerate()" style="padding: 9px 16px; font-size: 0.85rem; background: #1e293b; border: 1px solid var(--border-color);" title="استعراض التقرير التفاعلي بالذكاء الاصطناعي">
+                        <span>🤖 استعراض التقرير الكامل</span>
+                    </button>
+                </div>
+            </div>
+            <div class="card-table">
+                <table id="vulnsTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">الخطورة</th>
+                            <th style="width: 110px; text-align: center;">درجة CVSS</th>
+                            <th>اسم الثغرة / التهديد</th>
+                            <th>المعيار / التصنيف</th>
+                            <th>الهدف المتأثر</th>
+                            <th>التوصية العلاجية</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vulnsTableBody">
+                        <tr><td colspan="6" class="empty-state">لا توجد ثغرات معروضة بعد. قم ببدء عملية فحص.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 1.2: AI Security Advisory Report -->
+        <div id="tab-ai-report" class="tab-content">
+            <div class="ai-report-container">
+                <!-- Printable Official Header for Native Browser Print to PDF -->
+                <div class="print-only-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid #0284c7; padding-bottom: 12px; margin-bottom: 16px;">
+                        <div>
+                            <h1 style="font-size: 18pt; margin: 0; color: #0369a1; font-weight: 900; font-family: 'Cairo', sans-serif;">
+                                🛡️ منصة YemenScan للأمن السيبراني
+                            </h1>
+                            <p id="printDocSubtitle" style="font-size: 11pt; margin: 4px 0 0 0; color: #475569; font-weight: 700; font-family: 'Cairo', sans-serif;">
+                                التقرير الأمني الاستشاري للإدارة العليا (CISO Assessment)
+                            </p>
+                        </div>
+                        <div style="text-align: left; font-size: 9pt; color: #64748b; line-height: 1.5; font-family: 'Cairo', sans-serif;">
+                            <div><strong>النطاق:</strong> <span id="printTargetDomain" dir="ltr" style="font-family: monospace; font-weight: bold; color: #0f172a;"></span></div>
+                            <div><strong>التاريخ:</strong> <span id="printDate"></span></div>
+                            <div><strong>معرف الفحص:</strong> <span id="printScanId" dir="ltr" style="font-family: monospace;"></span></div>
+                            <div><strong>التصنيف:</strong> <span style="color: #b91c1c; font-weight: bold;">سري ومحمي (Confidential)</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-report-header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                            <h2 id="aiReportTitle" style="font-size: 1.25rem; color: #38bdf8;">تقرير الاستشارة التنفيذي للإدارة العليا (Executive Summary)</h2>
+                            <span id="aiModelBadge" class="ai-badge">🤖 Gemini Flash</span>
+                        </div>
+                        <p id="aiReportSubtitle" style="font-size: 0.85rem; color: var(--text-muted);">مؤشرات المخاطر والأثر الاستراتيجي على الأعمال دون تعقيدات برمجية</p>
+                    </div>
+
+                    <div class="no-print" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                        <!-- Segmented Switcher for Report Type -->
+                        <div style="display: inline-flex; background: #0f172a; border: 1px solid var(--border-color); border-radius: 10px; padding: 3px; gap: 4px;">
+                            <button id="btnTypeExec" class="type-toggle-btn active" onclick="switchReportType('executive')" title="التبديل إلى تقرير الإدارة العليا (CISO Advisor)">
+                                👔 تقرير الإدارة
+                            </button>
+                            <button id="btnTypeTech" class="type-toggle-btn" onclick="switchReportType('technical')" title="التبديل إلى التقرير التقني للمطورين والأنظمة">
+                                🛠️ التقرير التقني
+                            </button>
+                        </div>
+
+                        <!-- Native Vector Print Button -->
+                        <button class="export-btn" onclick="printReportNative()" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border: 1px solid #38bdf8;" title="طباعة التقرير بجودة متجهة فائقة الدقة أو حفظه كـ PDF عبر المتصفح">
+                            <span>🖨️ طباعة PDF</span>
+                        </button>
+
+                        <!-- Direct PDF Export Button -->
+                        <button class="export-btn" onclick="exportReportPdf()" style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); border: 1px solid #a855f7;" title="تنزيل مباشر لملف PDF فوري">
+                            <span>📄 PDF مباشر</span>
+                        </button>
+
+                        <!-- Standalone HTML Report Button -->
+                        <button class="export-btn" onclick="openStandaloneHtml()" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); border: 1px solid #2dd4bf;" title="فتح تقرير HTML تفاعلي مستقل وجاهز للمشاركة والطباعة">
+                            <span>🌐 تقرير HTML</span>
+                        </button>
+
+                        <!-- Markdown Download -->
+                        <button class="scan-btn" onclick="downloadMarkdownReport()" style="padding: 8px 12px; font-size: 0.82rem; background: #1e293b; border: 1px solid var(--border-color);" title="تنزيل نص التقرير بصيغة Markdown">
+                            <span>📝 Markdown</span>
+                        </button>
+
+                        <!-- JSON Export -->
+                        <button class="scan-btn" onclick="downloadJsonReport()" style="padding: 8px 12px; font-size: 0.82rem; background: #1e293b; border: 1px solid var(--border-color);" title="تصدير كافة نتائج الفحص والتقارير كملف JSON كامل">
+                            <span>📊 JSON</span>
+                        </button>
+
+                        <!-- Action Controls -->
+                        <button class="scan-btn" onclick="fetchAiReport(true)" style="padding: 8px 12px; font-size: 0.82rem; background: #1e293b; border: 1px solid var(--border-color);" title="إعادة إرسال النتائج للذكاء الاصطناعي وتحديث التقرير">
+                            <span>🔄 إعادة التوليد</span>
+                        </button>
+                        <button class="scan-btn" onclick="copyAiReportMarkdown()" style="padding: 8px 12px; font-size: 0.82rem; background: #0f766e; border: 1px solid #14b8a6;" title="نسخ نص التقرير المعروض بصيغة Markdown">
+                            <span id="copyBtnText">📋 نسخ</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="aiLoadingBox" class="ai-loading-box">
+                    <div class="ai-spinner"></div>
+                    <h3 id="aiLoadingTitle" style="font-size: 1.1rem; margin-bottom: 8px; color: #38bdf8;">جاري تحليل نتائج الفحص وتوليد التقرير بالذكاء الاصطناعي عبر Google Gemini...</h3>
+                    <p id="aiLoadingSubtitle" style="font-size: 0.85rem; color: var(--text-muted);">يقوم النموذج بقراءة بيانات الثغرات الموحدة وصياغة التقرير المخصص.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="aiEmptyBox" class="empty-state" style="padding: 3rem 1rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🤖</div>
+                    <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px;">لم يتم إنشاء تقرير ذكاء اصطناعي بعد لهذه الجلسة</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">اختر نوع التقرير المطلوب لتحليله وتوليده فوراً عبر Google Gemini:</p>
+                    <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                        <button class="export-btn export-executive" onclick="fetchAiReport(false, 'executive')" style="padding: 10px 22px; font-size: 0.95rem;">
+                            <span>📑 توليد تقرير الإدارة العليا</span>
+                        </button>
+                        <button class="export-btn export-technical" onclick="fetchAiReport(false, 'technical')" style="padding: 10px 22px; font-size: 0.95rem;">
+                            <span>🛠️ توليد التقرير التقني للمطورين</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rendered Report Content -->
+                <div id="aiReportView" class="ai-report-content" style="display: none;"></div>
+            </div>
+        </div>
+
+
+        <!-- Tab 1.5: Nuclei Dedicated Scanner -->
+        <div id="tab-nuclei" class="tab-content">
+            <div class="scan-card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #111827 0%, #1e1b4b 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="font-size: 1.15rem; color: #38bdf8;">فحص ثغرات وتكوينات محددة عبر Nuclei Engine</h2>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">تشغيل قوالب Nuclei المدمجة لاصطياد ثغرات OWASP API وتسريبات .env وملفات التوثيق</p>
+                    </div>
+                    <div id="nucleiBadgeInfo" style="font-size: 0.85rem; background: rgba(56, 189, 248, 0.15); padding: 6px 14px; border-radius: 8px; border: 1px solid #38bdf8; color: #38bdf8;">
+                        جاري تحميل حالة Nuclei...
+                    </div>
+                </div>
+                <div class="scan-form">
+                    <input type="text" id="nucleiTargetInput" class="scan-input" placeholder="أدخل رابط الهدف (مثال: http://target.com أو http://127.0.0.1:8000)">
+                    <select id="nucleiCategorySelect" class="scan-input" style="max-width: 240px;">
+                        <option value="">جميع القوالب المتاحة (All - 40 قالب)</option>
+                        <option value="wordpress">أنظمة ووردبريس (WordPress Suite)</option>
+                        <option value="php">بيئات بي إتش بي ولارافيل (PHP / Laravel)</option>
+                        <option value="apache">خوادم أباتشي (Apache Web Server)</option>
+                        <option value="nginx">خوادم إنجن إكس (Nginx Web Server)</option>
+                        <option value="iis">خوادم مايكروسوفت (IIS / ASP.NET)</option>
+                        <option value="vulnerabilities">ثغرات الحقن وملفات النظام (SQLi / LFI / XSS)</option>
+                        <option value="api">واجهات البرمجة (OWASP API / Swagger)</option>
+                        <option value="exposures">تسريبات التكوين وقواعد البيانات (.env / Git / SQL)</option>
+                        <option value="misconfigurations">أخطاء الإعدادات التكوينية (Misconfigurations)</option>
+                    </select>
+                    <button id="runNucleiBtn" class="scan-btn" onclick="runDirectNucleiScan()">
+                        <span>⚡ فحص Nuclei فوري</span>
+                    </button>
+                </div>
+                <div id="nucleiLoading" style="display: none; margin-top: 12px; color: #f59e0b; font-size: 0.9rem;">
+                    ⏳ جاري تنفيذ فحص Nuclei وتحليل الاستجابات... يرجى الانتظار
+                </div>
+            </div>
+
+            <!-- Nuclei Findings Table -->
+            <div class="card-table" style="margin-bottom: 1.5rem;">
+                <div style="padding: 12px 18px; background: #0f172a; border-bottom: 1px solid var(--border-color); font-weight: 700; color: #38bdf8;">
+                    نتائج فحص Nuclei المباشر
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">الخطورة</th>
+                            <th style="width: 110px; text-align: center;">درجة CVSS</th>
+                            <th>القالب / الثغرة</th>
+                            <th>التصنيف</th>
+                            <th>الرابط المتأثر</th>
+                            <th>التوصية الأمنية</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nucleiFindingsBody">
+                        <tr><td colspan="6" class="empty-state">لم يتم تشغيل فحص Nuclei مستقل بعد. أدخل رابطاً واضغط "فحص Nuclei فوري".</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nuclei Installed Templates List -->
+            <div class="card-table" style="padding: 1rem;">
+                <h3 style="margin-bottom: 10px; color: #818cf8; font-size: 1rem;">قائمة قوالب Nuclei المدمجة في المنظومة (<span id="tplCount">0</span> قالب)</h3>
+                <div id="templatesListGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; font-size: 0.85rem;">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: APIs & Endpoints -->
+        <div id="tab-apis" class="tab-content">
+            <div class="card-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>كود الحالة</th>
+                            <th>مسار واجهة البرمجة (Endpoint)</th>
+                            <th>النوع والخصائص</th>
+                            <th>الحجم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="apisTableBody">
+                        <tr><td colspan="4" class="empty-state">لم يتم استكشاف مسارات APIs بعد.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Web Services -->
+        <div id="tab-web" class="tab-content">
+            <div class="card-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>كود الحالة</th>
+                            <th>الرابط المستهدف</th>
+                            <th>عنوان الصفحة (Title)</th>
+                            <th>خادم الويب</th>
+                            <th>التقنيات المكتشفة (Tech)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="webTableBody">
+                        <tr><td colspan="5" class="empty-state">لم يتم رصد خدمات ويب بعد.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 4: Subdomains & Ports -->
+        <div id="tab-discovery" class="tab-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="card-table" style="padding: 1rem;">
+                    <h3 style="margin-bottom: 12px; color: #38bdf8;">قائمة النطاقات الفرعية (Subdomains)</h3>
+                    <ul id="subdomainsList" style="list-style: none; max-height: 400px; overflow-y: auto; line-height: 2;">
+                        <li style="color: var(--text-muted);">بانتظار الفحص...</li>
+                    </ul>
+                </div>
+                <div class="card-table" style="padding: 1rem;">
+                    <h3 style="margin-bottom: 12px; color: #818cf8;">المنافذ المفتوحة (Open Ports)</h3>
+                    <ul id="portsList" style="list-style: none; max-height: 400px; overflow-y: auto; line-height: 2;">
+                        <li style="color: var(--text-muted);">بانتظار الفحص...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Logs -->
+        <div id="tab-logs" class="tab-content">
+            <div id="logsBox" class="log-box">
+                [SYSTEM] YemenScan v2.0 Ready. Waiting for target input...
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        مشروع التخرج: YemenScan - منظومة أمنية متكاملة لاستكشاف الأصول وفحص الثغرات وفق معايير OWASP | 2026
+    </footer>
+
+    <script>
+        // Automatically route to backend if opened via file:/// protocol
+        const API_BASE = (window.location.protocol === 'file:' || !window.location.host) 
+            ? 'http://127.0.0.1:8000' 
+            : '';
+
+        let currentScanId = null;
+        let pollTimer = null;
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        async function loadScansHistory() {
+            try {
+                const res = await fetch(`${API_BASE}/api/scans`);
+                const data = await res.json();
+                const select = document.getElementById('scansHistory');
+                const prevVal = select.value;
+                select.innerHTML = '<option value="">-- الجلسات السابقة --</option>';
+                if (data.scans) {
+                    data.scans.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s.scan_id;
+                        const sVal = s.status || s.current_stage || '';
+                        let statusIcon = '⏳';
+                        let stageText = 'قيد الفحص';
+                        if (sVal === 'stopped' || s.current_stage === 'stopped') {
+                            statusIcon = '🛑';
+                            stageText = 'متوقف';
+                        } else if (sVal === 'failed' || (s.has_error && !s.is_completed)) {
+                            statusIcon = '❌';
+                            stageText = 'فاشل';
+                        } else if (sVal === 'partial' || (s.has_error && s.is_completed)) {
+                            statusIcon = '⚠️';
+                            stageText = 'جزئي';
+                        } else if (s.is_completed && !s.has_error) {
+                            statusIcon = '✅';
+                            stageText = 'مكتمل';
+                        }
+                        opt.textContent = `${statusIcon} ${s.target_domain} (${stageText} ${s.progress}%) [${s.scan_id.slice(-6)}]`;
+                        select.appendChild(opt);
+                    });
+                    if (prevVal && Array.from(select.options).some(o => o.value === prevVal)) {
+                        select.value = prevVal;
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function clearScanUI() {
+            document.getElementById('statSubdomains').textContent = '0';
+            document.getElementById('statPorts').textContent = '0';
+            document.getElementById('statLiveWeb').textContent = '0';
+            document.getElementById('statApis').textContent = '0';
+            document.getElementById('statVulns').textContent = '0';
+            document.getElementById('subdomainsList').innerHTML = '<li style="color: var(--text-muted);">جاري التحميل...</li>';
+            document.getElementById('portsList').innerHTML = '<li style="color: var(--text-muted);">جاري التحميل...</li>';
+            document.getElementById('webTableBody').innerHTML = '<tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>';
+            document.getElementById('apisTableBody').innerHTML = '<tr><td colspan="4" class="empty-state">جاري التحميل...</td></tr>';
+            document.getElementById('vulnsTableBody').innerHTML = '<tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>';
+            document.getElementById('logsBox').innerHTML = '<div>[SYSTEM] جاري تحميل بيانات الجلسة...</div>';
+        }
+
+        function setScanRunningUI(isRunning) {
+            const startBtn = document.getElementById('startScanBtn');
+            const stopBtn = document.getElementById('stopScanBtn');
+            const progressStopBtn = document.getElementById('progressStopBtn');
+            const targetInput = document.getElementById('targetDomain');
+
+            if (isRunning) {
+                if (startBtn) {
+                    startBtn.style.display = 'none';
+                    startBtn.disabled = true;
+                }
+                if (stopBtn) {
+                    stopBtn.style.display = 'inline-flex';
+                    stopBtn.disabled = false;
+                    stopBtn.innerHTML = '<span>🛑 إيقاف الفحص</span>';
+                }
+                if (progressStopBtn) {
+                    progressStopBtn.style.display = 'inline-block';
+                    progressStopBtn.disabled = false;
+                }
+                if (targetInput) targetInput.disabled = true;
+            } else {
+                if (startBtn) {
+                    startBtn.style.display = 'inline-flex';
+                    startBtn.disabled = false;
+                }
+                if (stopBtn) {
+                    stopBtn.style.display = 'none';
+                    stopBtn.disabled = false;
+                    stopBtn.innerHTML = '<span>🛑 إيقاف الفحص</span>';
+                }
+                if (progressStopBtn) {
+                    progressStopBtn.style.display = 'none';
+                    progressStopBtn.disabled = false;
+                }
+                if (targetInput) targetInput.disabled = false;
+            }
+        }
+
+        async function stopCurrentScan() {
+            if (!currentScanId) {
+                alert('لا توجد عملية فحص نشطة حالياً لإيقافها.');
+                return;
+            }
+
+            if (!confirm('هل أنت متأكد من رغبتك في إيقاف عملية الفحص الحالية وإنهاء كافة الأدوات التابعة لها؟')) {
+                return;
+            }
+
+            const stopBtn = document.getElementById('stopScanBtn');
+            const progressStopBtn = document.getElementById('progressStopBtn');
+            if (stopBtn) {
+                stopBtn.disabled = true;
+                stopBtn.innerHTML = '<span>⏳ جاري إيقاف الفحص...</span>';
+            }
+            if (progressStopBtn) {
+                progressStopBtn.disabled = true;
+                progressStopBtn.textContent = '⏳ جاري الإيقاف...';
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/api/scan/${currentScanId}/stop`, {
+                    method: 'POST'
+                });
+                const data = await res.json();
+                if (res.ok && data.status === 'success') {
+                    const statusText = document.getElementById('currentStatusText');
+                    if (statusText) {
+                        statusText.textContent = '🛑 تم إرسال أمر إيقاف الفحص...';
+                        statusText.style.color = '#f87171';
+                    }
+                } else {
+                    alert('تنبيه: ' + (data.message || data.detail || 'تعذر تأكيد الإيقاف'));
+                }
+            } catch (err) {
+                alert('خطأ أثناء إرسال أمر الإيقاف: ' + err.message);
+            } finally {
+                setTimeout(async () => {
+                    await pollStatus();
+                    loadScansHistory();
+                }, 800);
+            }
+        }
+
+        async function loadSelectedScan() {
+            const select = document.getElementById('scansHistory');
+            if (!select.value) return;
+            currentScanId = select.value;
+            
+            clearScanUI();
+            document.getElementById('progressBox').style.display = 'block';
+            if (pollTimer) clearInterval(pollTimer);
+            
+            const isRunning = await pollStatus();
+            if (isRunning) {
+                pollTimer = setInterval(pollStatus, 3000);
+            }
+            fetchScanDetails();
+
+            // Refresh AI Report view if available in scoped cache
+            const cachedReport = getCachedReport(currentScanId, currentReportType);
+            const reportView = document.getElementById('aiReportView');
+            const emptyBox = document.getElementById('aiEmptyBox');
+            const loadingBox = document.getElementById('aiLoadingBox');
+            if (loadingBox) loadingBox.style.display = 'none';
+
+            if (cachedReport) {
+                lastAiReportMarkdown = cachedReport;
+                if (reportView) {
+                    reportView.innerHTML = safeMarkdownRender(cachedReport);
+                    reportView.style.display = 'block';
+                }
+                if (emptyBox) emptyBox.style.display = 'none';
+            } else {
+                if (reportView) reportView.style.display = 'none';
+                if (emptyBox) emptyBox.style.display = 'block';
+            }
+        }
+
+        async function startScan() {
+            const domainInput = document.getElementById('targetDomain');
+            const domain = domainInput ? domainInput.value.trim() : '';
+            if (!domain) {
+                alert('يرجى إدخال اسم النطاق المستهدف للفحص!');
+                if (domainInput) domainInput.focus();
+                return;
+            }
+
+            clearScanUI();
+            setScanRunningUI(true);
+            document.getElementById('progressBox').style.display = 'block';
+            document.getElementById('currentStatusText').style.color = '';
+            document.getElementById('currentStatusText').textContent = 'جاري التحقق من النطاق وتهيئة خط الفحص الأمني...';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/scan/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domain })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.status === 'success') {
+                    currentScanId = data.scan_id;
+                    if (pollTimer) clearInterval(pollTimer);
+                    pollTimer = setInterval(pollStatus, 3000);
+                    pollStatus();
+                    loadScansHistory();
+                } else {
+                    const errDetail = data.detail || data.message || 'النطاق المدخل غير صالح أو غير مسجل في خوادم DNS العالمية.';
+                    alert('خطأ في النطاق المستهدف:\n\n' + errDetail);
+                    document.getElementById('progressBox').style.display = 'none';
+                    setScanRunningUI(false);
+                }
+            } catch (err) {
+                alert('فشل الاتصال بالخادم على 127.0.0.1:8000. تأكد من تشغيل الخادم وافتح الرابط: http://127.0.0.1:8000\n(' + err.message + ')');
+                document.getElementById('progressBox').style.display = 'none';
+                setScanRunningUI(false);
+            }
+        }
+
+        async function pollStatus() {
+            if (!currentScanId) return false;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/scan/${currentScanId}/status`);
+                const json = await res.json();
+                if (json.status === 'success') {
+                    const d = json.data;
+                    document.getElementById('progressPercentage').textContent = `${d.progress_percentage}%`;
+                    document.getElementById('progressBarFill').style.width = `${d.progress_percentage}%`;
+                    
+                    const statusText = document.getElementById('currentStatusText');
+                    const sVal = d.status || d.current_stage || '';
+                    if (sVal === 'stopped' || d.current_stage === 'stopped') {
+                        statusText.textContent = `🛑 متوقف: ${d.logs[d.logs.length - 1] || 'تم إيقاف الفحص بواسطة المستخدم.'}`;
+                        statusText.style.color = '#f87171';
+                    } else if (sVal === 'failed' || (d.has_error && !d.is_completed)) {
+                        statusText.textContent = `❌ فشل الفحص: ${d.error_message || d.logs[d.logs.length - 1] || 'فشلت أدوات الفحص أثناء التنفيذ.'}`;
+                        statusText.style.color = '#ef4444';
+                    } else if (sVal === 'partial' || (d.has_error && d.is_completed)) {
+                        statusText.textContent = `⚠️ اكتمل الفحص جزئياً: تعذر إكمال بعض المراحل أو الأدوات (${d.logs[d.logs.length - 1] || ''})`;
+                        statusText.style.color = '#f59e0b';
+                    } else if (d.is_completed && !d.has_error) {
+                        statusText.textContent = `✅ اكتمل الفحص الأمني الشامل بنجاح (100%)`;
+                        statusText.style.color = '#34d399';
+                    } else {
+                        statusText.textContent = `الأداة النشطة: [${(d.current_tool || '').toUpperCase()}] - ${d.logs[d.logs.length - 1] || ''}`;
+                        statusText.style.color = '';
+                    }
+
+                    // Update Metrics
+                    document.getElementById('statSubdomains').textContent = d.stats.subdomains_count || 0;
+                    document.getElementById('statPorts').textContent = d.stats.open_ports_count || 0;
+                    document.getElementById('statLiveWeb').textContent = d.stats.live_urls_count || 0;
+                    document.getElementById('statApis').textContent = d.stats.api_endpoints_count || 0;
+                    document.getElementById('statVulns').textContent = d.stats.vulnerabilities_count || 0;
+
+                    // Update Logs
+                    const logsBox = document.getElementById('logsBox');
+                    logsBox.innerHTML = d.logs.map(l => `<div>${l}</div>`).join('');
+                    logsBox.scrollTop = logsBox.scrollHeight;
+
+                    // If completed, stopped, or error, stop polling and fetch full results
+                    const isRunning = !d.is_completed && !d.has_error && d.current_stage !== 'stopped' && sVal !== 'stopped' && sVal !== 'failed' && sVal !== 'partial';
+                    if (!isRunning) {
+                        if (pollTimer) clearInterval(pollTimer);
+                        setScanRunningUI(false);
+                        fetchScanDetails();
+                    } else {
+                        setScanRunningUI(true);
+                    }
+                    return isRunning;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            return false;
+        }
+
+        // Helper to render CVSS pill badge
+        function renderCvssBadge(score, vector) {
+            if (score === null || score === undefined || score === '' || isNaN(score)) {
+                return `<span class="cvss-pill cvss-pill-none" title="CVSS غير محدد">N/A</span>`;
+            }
+            const s = parseFloat(score);
+            if (isNaN(s)) {
+                return `<span class="cvss-pill cvss-pill-none" title="CVSS غير محدد">N/A</span>`;
+            }
+            let cls = 'cvss-pill-none';
+            if (s >= 9.0) cls = 'cvss-pill-critical';
+            else if (s >= 7.0) cls = 'cvss-pill-high';
+            else if (s >= 4.0) cls = 'cvss-pill-medium';
+            else if (s > 0) cls = 'cvss-pill-low';
+            else cls = 'cvss-pill-none';
+            
+            const tip = vector ? `${vector} (درجة ${s.toFixed(1)})` : `CVSS v3.1: ${s.toFixed(1)}`;
+            return `<span class="cvss-pill ${cls}" title="${tip}">⚡ ${s.toFixed(1)}</span>`;
+        }
+
+        async function fetchScanDetails() {
+            if (!currentScanId) return;
+
+            // 1. Fetch Discovery
+            try {
+                const res = await fetch(`${API_BASE}/api/scan/${currentScanId}/discovery`);
+                const data = await res.json();
+                if (data.subdomains) {
+                    document.getElementById('subdomainsList').innerHTML = data.subdomains.map(s => `<li>🔹 ${s}</li>`).join('') || '<li>لا توجد نتائج</li>';
+                }
+                if (data.open_ports) {
+                    document.getElementById('portsList').innerHTML = data.open_ports.map(p => `<li>⚡ ${p}</li>`).join('') || '<li>لا توجد نتائج</li>';
+                }
+            } catch (e) {}
+
+            // 2. Fetch Endpoints & Web
+            try {
+                const res = await fetch(`${API_BASE}/api/scan/${currentScanId}/endpoints`);
+                const data = await res.json();
+                
+                // Web Table
+                const webBody = document.getElementById('webTableBody');
+                if (data.live_web_services && data.live_web_services.length > 0) {
+                    webBody.innerHTML = data.live_web_services.map(w => `
+                        <tr>
+                            <td><span class="badge ${w.status_code < 400 ? 'badge-low' : 'badge-high'}">${w.status_code}</span></td>
+                            <td><a href="${w.url}" target="_blank" style="color:#38bdf8; text-decoration:none;">${w.url}</a></td>
+                            <td>${w.title || '-'}</td>
+                            <td>${w.webserver || '-'}</td>
+                            <td>${(w.tech || []).slice(0, 4).join(', ') || '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+
+                // APIs Table
+                const apisBody = document.getElementById('apisTableBody');
+                if (data.api_endpoints && data.api_endpoints.length > 0) {
+                    apisBody.innerHTML = data.api_endpoints.map(a => `
+                        <tr>
+                            <td><span class="badge ${a.status_code === 200 ? 'badge-low' : 'badge-medium'}">${a.status_code}</span></td>
+                            <td><strong style="color:#f59e0b;">${a.url}</strong></td>
+                            <td>${a.is_swagger_or_doc ? '📑 توثيق Swagger/Docs' : (a.is_actuator ? '⚙️ Spring Actuator' : '🔌 واجهة API')}</td>
+                            <td>${a.content_length} bytes</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {}
+
+            // 3. Fetch Vulnerabilities (Unified Nuclei + Wapiti)
+            try {
+                const res = await fetch(`${API_BASE}/api/scan/${currentScanId}/vulnerabilities`);
+                const data = await res.json();
+                const vBody = document.getElementById('vulnsTableBody');
+                const vulnsList = data.vulnerabilities || data.data || [];
+                if (vulnsList.length > 0) {
+                    vBody.innerHTML = vulnsList.map(v => {
+                        const sevClass = 'badge-' + (v.severity ? v.severity.toLowerCase() : 'info');
+                        const cvssBadge = renderCvssBadge(v.cvss_score, v.cvss_vector);
+                        const cveBadge = v.cve_id ? `<span style="display:inline-block; margin-right:6px; font-size:0.75rem; font-family:monospace; color:#38bdf8; background:rgba(56,189,248,0.12); padding:1px 6px; border-radius:4px; border:1px solid rgba(56,189,248,0.3); font-weight:700;">${v.cve_id}</span>` : '';
+                        const cweBadge = v.cwe_id ? `<span style="display:inline-block; margin-right:6px; font-size:0.75rem; font-family:monospace; color:#c084fc; background:rgba(192,132,252,0.12); padding:1px 6px; border-radius:4px; border:1px solid rgba(192,132,252,0.3); font-weight:700;">${v.cwe_id}</span>` : '';
+                        return `
+                            <tr>
+                                <td><span class="badge ${sevClass}">${v.severity}</span></td>
+                                <td style="text-align: center;">${cvssBadge}</td>
+                                <td>
+                                    <strong>${v.title}</strong>
+                                    ${cveBadge}${cweBadge}
+                                    <div style="color:var(--text-muted); font-size:0.8rem; margin-top:4px;">${v.description}</div>
+                                </td>
+                                <td><span style="color:#818cf8;">${v.source}</span><br><small style="color:#38bdf8; font-weight:600;">🏷️ ${v.owasp_category || v.category}</small></td>
+                                <td><code style="color:#38bdf8;">${v.url}</code></td>
+                                <td><div class="remediation-box">🛠️ ${v.remediation}</div></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (e) {}
+        }
+
+        // Direct Nuclei Functions
+        async function loadNucleiInfo() {
+            try {
+                const res = await fetch(`${API_BASE}/api/nuclei/info`);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    const badge = document.getElementById('nucleiBadgeInfo');
+                    const dockerText = data.docker_available ? 'Docker: نشط 🐳' : 'Native: مباشر 🐍';
+                    badge.innerHTML = `المحرك: <strong>${data.engine}</strong> | ${dockerText} | القوالب: <strong>${data.total_templates}</strong>`;
+                    document.getElementById('tplCount').textContent = data.total_templates;
+
+                    const grid = document.getElementById('templatesListGrid');
+                    if (data.templates) {
+                        grid.innerHTML = data.templates.map(t => {
+                            const sevClass = 'badge-' + (t.severity ? t.severity.toLowerCase() : 'info');
+                            return `
+                                <div style="background: #0b1120; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                        <strong style="color:#e2e8f0; font-size:0.85rem;">${t.name}</strong>
+                                        <span class="badge ${sevClass}">${t.severity}</span>
+                                    </div>
+                                    <div style="color:var(--text-muted); font-size:0.75rem; margin-bottom: 6px;">${t.description.substring(0, 80)}...</div>
+                                    <div style="display: flex; justify-content: space-between; font-size:0.75rem; color:#818cf8;">
+                                        <span>📁 ${t.category}</span>
+                                        <span>🏷️ ${t.id}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load Nuclei info:', e);
+            }
+        }
+
+        async function runDirectNucleiScan() {
+            const target = document.getElementById('nucleiTargetInput').value.trim();
+            const category = document.getElementById('nucleiCategorySelect').value;
+            if (!target) {
+                alert('يرجى كتابة رابط الهدف لفحص Nuclei!');
+                return;
+            }
+
+            const btn = document.getElementById('runNucleiBtn');
+            const loading = document.getElementById('nucleiLoading');
+            const body = document.getElementById('nucleiFindingsBody');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            body.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:#38bdf8;">⏳ جاري فحص الهدف عبر Nuclei...</td></tr>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/nuclei/scan`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target, category: category || null })
+                });
+                const data = await res.json();
+                loading.style.display = 'none';
+                btn.disabled = false;
+
+                if (data.status === 'success') {
+                    if (data.findings && data.findings.length > 0) {
+                        body.innerHTML = data.findings.map(f => {
+                            const sevClass = 'badge-' + (f.severity ? f.severity.toLowerCase() : 'info');
+                            const cvssBadge = renderCvssBadge(f.cvss_score, f.cvss_vector);
+
+                            return `
+                                <tr>
+                                    <td><span class="badge ${sevClass}">${f.severity}</span></td>
+                                    <td style="text-align: center;">${cvssBadge}</td>
+                                    <td>
+                                        <strong>${f.title}</strong>
+                                        <div style="color:var(--text-muted); font-size:0.8rem; margin-top:4px;">${f.description}</div>
+                                    </td>
+                                    <td><span style="color:#818cf8;">${f.category}</span><br><small style="color:var(--text-muted);">${f.id}</small></td>
+                                    <td><code style="color:#38bdf8;">${f.url}</code></td>
+                                    <td><div class="remediation-box">🛠️ ${f.remediation}</div></td>
+                                </tr>
+                            `;
+                        }).join('');
+                    } else {
+                        body.innerHTML = `<tr><td colspan="6" class="empty-state" style="color:#34d399;">✅ لم يتم العثور على ثغرات أو تسريبات من القوالب المحددة على الهدف (${target}).</td></tr>`;
+                    }
+                } else {
+                    body.innerHTML = `<tr><td colspan="6" class="empty-state" style="color:#ef4444;">حدث خطأ أثناء الفحص: ${data.detail || 'خطأ غير معروف'}</td></tr>`;
+                }
+            } catch (err) {
+                loading.style.display = 'none';
+                btn.disabled = false;
+                body.innerHTML = `<tr><td colspan="6" class="empty-state" style="color:#ef4444;">فشل الاتصال بالخادم: ${err.message}</td></tr>`;
+            }
+        }
+
+        // =========================================================
+        // Dual-Mode AI Report Management (Executive vs Technical)
+        // Scoped per scan_id to ensure complete scan isolation
+        // =========================================================
+        let currentReportType = 'executive';
+        let reportCache = {}; // { [scan_id]: { executive: '...', technical: '...' } }
+        let reportMeta = {}; // { [scan_id]: { executive: {...}, technical: {...} } }
+        let lastAiReportMarkdown = '';
+
+        function getCachedReport(scanId, type) {
+            if (!scanId || !reportCache[scanId]) return '';
+            return reportCache[scanId][type] || '';
+        }
+
+        function setCachedReport(scanId, type, content, meta) {
+            if (!scanId) return;
+            if (!reportCache[scanId]) reportCache[scanId] = {};
+            if (!reportMeta[scanId]) reportMeta[scanId] = {};
+            reportCache[scanId][type] = content;
+            reportMeta[scanId][type] = meta;
+        }
+
+        function updateReportHeaderUI(type) {
+            const titleEl = document.getElementById('aiReportTitle');
+            const subtitleEl = document.getElementById('aiReportSubtitle');
+            const btnExec = document.getElementById('btnTypeExec');
+            const btnTech = document.getElementById('btnTypeTech');
+
+            if (type === 'technical') {
+                if (titleEl) titleEl.textContent = 'التقرير الأمني التقني المفصل (Technical Security Report)';
+                if (subtitleEl) subtitleEl.textContent = 'تفاصيل الثغرات لمسؤولي الأنظمة والمطورين مع كود الترقيع وأوامر التحصين البرمجية المعزولة';
+                if (btnExec) btnExec.classList.remove('active');
+                if (btnTech) btnTech.classList.add('active');
+            } else {
+                if (titleEl) titleEl.textContent = 'تقرير الاستشارة التنفيذي للإدارة العليا (Executive Summary)';
+                if (subtitleEl) subtitleEl.textContent = 'مؤشرات المخاطر والأثر الاستراتيجي على الأعمال دون تعقيدات برمجية';
+                if (btnExec) btnExec.classList.add('active');
+                if (btnTech) btnTech.classList.remove('active');
+            }
+        }
+
+        async function switchReportType(type) {
+            if (type !== 'executive' && type !== 'technical') type = 'executive';
+            currentReportType = type;
+            updateReportHeaderUI(type);
+
+            // If we already have this report type cached in memory for currentScanId, display it directly
+            const cachedText = getCachedReport(currentScanId, type);
+            if (cachedText) {
+                const reportView = document.getElementById('aiReportView');
+                const loadingBox = document.getElementById('aiLoadingBox');
+                const emptyBox = document.getElementById('aiEmptyBox');
+                const modelBadge = document.getElementById('aiModelBadge');
+
+                lastAiReportMarkdown = cachedText;
+                const meta = (reportMeta[currentScanId] && reportMeta[currentScanId][type]) || {};
+                const cachedLabel = meta.cached ? ' [مخزن مؤقتاً ⚡]' : ' [توليد مباشر 🚀]';
+                if (modelBadge) {
+                    modelBadge.textContent = `🤖 ${meta.model_used || 'Gemini Flash'}${cachedLabel}`;
+                }
+
+                if (loadingBox) loadingBox.style.display = 'none';
+                if (emptyBox) emptyBox.style.display = 'none';
+                if (reportView) {
+                    reportView.innerHTML = safeMarkdownRender(lastAiReportMarkdown);
+                    reportView.style.display = 'block';
+                }
+                return;
+            }
+
+            // Otherwise, fetch from backend (will use session cache if available)
+            await fetchAiReport(false, type);
+        }
+
+        function openAiTabAndGenerate() {
+            const btn = document.getElementById('btn-tab-ai');
+            switchTab('tab-ai-report', btn);
+            if (!getCachedReport(currentScanId, currentReportType)) {
+                fetchAiReport(false, currentReportType);
+            }
+        }
+
+        async function openAiAndExport(type) {
+            const btn = document.getElementById('btn-tab-ai');
+            switchTab('tab-ai-report', btn);
+            await exportReportPdf(type);
+        }
+
+        function printReportNative() {
+            if (!currentScanId) {
+                const select = document.getElementById('scansHistory');
+                if (select && select.options.length > 1) {
+                    currentScanId = select.options[1].value;
+                    select.value = currentScanId;
+                }
+            }
+            if (!currentScanId) {
+                alert('يرجى اختيار أو إطلاق فحص أمني أولاً للطباعة.');
+                return;
+            }
+
+            const domainName = document.getElementById('targetDomainDisplay')?.textContent || document.getElementById('targetDomain')?.value || 'النطاق المستهدف';
+            const printDomain = document.getElementById('printTargetDomain');
+            if (printDomain) printDomain.textContent = domainName;
+            const printScan = document.getElementById('printScanId');
+            if (printScan) printScan.textContent = currentScanId;
+            const printD = document.getElementById('printDate');
+            if (printD) printD.textContent = new Date().toLocaleDateString('ar-YE');
+            const printSub = document.getElementById('printDocSubtitle');
+            if (printSub) {
+                printSub.textContent = (currentReportType === 'executive')
+                    ? 'التقرير الأمني الاستشاري للإدارة العليا (CISO Assessment)'
+                    : 'التقرير الأمني التقني للمطورين ومديري الأنظمة (Technical Remediation)';
+            }
+
+            const aiTabBtn = document.getElementById('btn-tab-ai');
+            if (aiTabBtn) switchTab('tab-ai-report', aiTabBtn);
+
+            const origTitle = document.title;
+            document.title = `YemenScan_${currentReportType === 'executive' ? 'Executive' : 'Technical'}_Report_${currentScanId}`;
+            window.print();
+            setTimeout(() => { document.title = origTitle; }, 1000);
+        }
+
+        function openStandaloneHtml() {
+            if (!currentScanId) {
+                const select = document.getElementById('scansHistory');
+                if (select && select.options.length > 1) {
+                    currentScanId = select.options[1].value;
+                    select.value = currentScanId;
+                }
+            }
+            if (!currentScanId) {
+                alert('يرجى اختيار أو إطلاق فحص أمني أولاً.');
+                return;
+            }
+            window.open(`${API_BASE}/api/scan/${currentScanId}/export/html?report_type=${currentReportType}`, '_blank');
+        }
+
+        function downloadMarkdownReport() {
+            if (!currentScanId) {
+                const select = document.getElementById('scansHistory');
+                if (select && select.options.length > 1) {
+                    currentScanId = select.options[1].value;
+                    select.value = currentScanId;
+                }
+            }
+            if (!currentScanId) {
+                alert('يرجى اختيار أو إطلاق فحص أمني أولاً.');
+                return;
+            }
+            window.location.href = `${API_BASE}/api/scan/${currentScanId}/export/markdown?report_type=${currentReportType}`;
+        }
+
+        function downloadJsonReport() {
+            if (!currentScanId) {
+                const select = document.getElementById('scansHistory');
+                if (select && select.options.length > 1) {
+                    currentScanId = select.options[1].value;
+                    select.value = currentScanId;
+                }
+            }
+            if (!currentScanId) {
+                alert('يرجى اختيار أو إطلاق فحص أمني أولاً.');
+                return;
+            }
+            window.location.href = `${API_BASE}/api/scan/${currentScanId}/export/json`;
+        }
+
+        async function exportReportPdf(type) {
+            const targetType = (type === 'technical' || type === 'executive') ? type : currentReportType;
+
+            // 1. التأكد من تحديد جلسة فحص حالية
+            if (!currentScanId) {
+                const select = document.getElementById('scansHistory');
+                if (select && select.options.length > 1) {
+                    currentScanId = select.options[1].value;
+                    select.value = currentScanId;
+                }
+            }
+
+            if (!currentScanId) {
+                alert('يرجى اختيار أو إطلاق فحص أمني أولاً لتصدير التقرير.');
+                return;
+            }
+
+            // 2. الانتقال لتبويب تقرير الذكاء الاصطناعي
+            const aiTabBtn = document.getElementById('btn-tab-ai');
+            if (aiTabBtn) {
+                switchTab('tab-ai-report', aiTabBtn);
+            }
+
+            // 3. التبديل للنوع المطلوب إذا لم يكن مفعلاً وجلبه
+            if (currentReportType !== targetType || !getCachedReport(currentScanId, targetType)) {
+                await switchReportType(targetType);
+            }
+
+            // 4. التحقق من اكتمال رسم التقرير
+            const reportView = document.getElementById('aiReportView');
+            if (!reportView || reportView.style.display === 'none' || !lastAiReportMarkdown) {
+                alert('⏳ جاري توليد التقرير الأمني... يرجى الانتظار بضع ثوانٍ ثم النقر مجدداً.');
+                return;
+            }
+
+            const domainName = document.getElementById('targetDomainDisplay')?.textContent || document.getElementById('targetDomain')?.value || 'Target';
+            const isExecutive = targetType === 'executive';
+            const fileName = `YemenScan_${isExecutive ? 'Executive' : 'Technical'}_Report_${currentScanId}.pdf`;
+
+            // 5. التصدير المباشر عبر مكتبة html2pdf.js إذا كانت متوفرة
+            if (typeof html2pdf !== 'undefined') {
+                const toast = document.createElement('div');
+                toast.id = 'pdfExportToast';
+                toast.style.cssText = 'position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: #0284c7; color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 99999; font-size: 0.95rem;';
+                toast.innerHTML = '📄 جاري تجهيز وتصدير ملف الـ PDF... يرجى الانتظار';
+                document.body.appendChild(toast);
+
+                try {
+                    // بناء حاوية منسقة مخصصة للطباعة بنسبة A4 وعزل كامل للأكواد
+                    const printCanvas = document.createElement('div');
+                    printCanvas.className = 'pdf-export-wrapper';
+                    printCanvas.dir = 'rtl';
+                    printCanvas.style.cssText = `
+                        position: fixed !important;
+                        left: -9999px !important;
+                        top: 0 !important;
+                        background-color: #ffffff !important;
+                        color: #0f172a !important;
+                        padding: 24px 28px !important;
+                        font-family: 'Cairo', sans-serif !important;
+                        line-height: 1.6 !important;
+                        width: 794px !important;
+                        box-sizing: border-box !important;
+                        z-index: -1000 !important;
+                    `;
+
+                    // ترويسة التقرير الرسمية
+                    const headerHtml = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid ${isExecutive ? '#0284c7' : '#0d9488'}; padding-bottom: 14px; margin-bottom: 22px;">
+                            <div>
+                                <h1 style="font-size: 19pt; margin: 0; color: ${isExecutive ? '#0369a1' : '#0f766e'}; font-weight: 900; font-family: 'Cairo', sans-serif;">
+                                    🛡️ منصة YemenScan للأمن السيبراني
+                                </h1>
+                                <p style="font-size: 11pt; margin: 4px 0 0 0; color: #475569; font-weight: 700; font-family: 'Cairo', sans-serif;">
+                                    ${isExecutive ? 'التقرير الأمني الاستشاري للإدارة العليا (CISO Executive Assessment)' : 'التقرير الفني التقني للمطورين ومديري الأنظمة (Technical Remediation Plan)'}
+                                </p>
+                            </div>
+                            <div style="text-align: left; font-size: 9pt; color: #64748b; line-height: 1.5; font-family: 'Cairo', sans-serif;">
+                                <div><strong>النطاق المستهدف:</strong> <span dir="ltr" style="font-family: monospace; font-weight: bold; color: #0f172a;">${domainName}</span></div>
+                                <div><strong>تاريخ الإصدار:</strong> ${new Date().toLocaleDateString('ar-YE')}</div>
+                                <div><strong>معرف الفحص:</strong> <span dir="ltr" style="font-family: monospace;">${currentScanId}</span></div>
+                            </div>
+                        </div>
+                    `;
+
+                    // استنساخ محتوى التقرير المعروض مع تطبيق عزل الـ LTR
+                    const contentHtml = `
+                        <div class="pdf-export-body" style="color: #1e293b; font-size: 10.5pt; font-family: 'Cairo', sans-serif;">
+                            ${reportView.innerHTML}
+                        </div>
+                        <div style="margin-top: 36px; padding-top: 12px; border-top: 1px solid #cbd5e1; text-align: center; font-size: 8.5pt; color: #94a3b8; font-family: 'Cairo', sans-serif;">
+                            تم إنشاء وتصدير هذا التقرير الأمني آلياً عبر منظومة YemenScan لإدارة سطح الهجوم • وثيقة سرية ومحمية
+                        </div>
+                    `;
+
+                    printCanvas.innerHTML = headerHtml + contentHtml;
+                    document.body.appendChild(printCanvas);
+
+                    // إعدادات تصدير html2pdf لمنع انقسام الأكواد وتنسيق A4 دقيق
+                    const opt = {
+                        margin: [10, 10, 10, 10],
+                        filename: fileName,
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: {
+                            scale: 2,
+                            useCORS: true,
+                            letterRendering: true,
+                            logging: false
+                        },
+                        jsPDF: {
+                            unit: 'mm',
+                            format: 'a4',
+                            orientation: 'portrait'
+                        },
+                        pagebreak: {
+                            mode: ['avoid-all', 'css', 'legacy'],
+                            avoid: ['pre', 'code', 'table', 'tr', 'h1', 'h2', 'h3', '.table-responsive']
+                        }
+                    };
+
+                    await html2pdf().set(opt).from(printCanvas).save();
+                    if (printCanvas.parentNode) {
+                        printCanvas.parentNode.removeChild(printCanvas);
+                    }
+                    if (toast && toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                    return;
+                } catch (pdfErr) {
+                    console.warn('html2pdf generation fallback:', pdfErr);
+                    if (toast && toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }
+            }
+
+            // 6. الخيار البديل القياسي عبر حوار الطباعة الأصلي (Native Browser Print to PDF)
+            printReportNative();
+        }
+
+        function safeMarkdownRender(markdownText) {
+            if (typeof marked !== 'undefined' && marked.parse) {
+                try {
+                    const renderer = new marked.Renderer();
+                    
+                    // 1. Force LTR direction, BiDi isolation, and custom class on multi-line code blocks
+                    renderer.code = function(code, infostring) {
+                        const lang = (infostring || '').match(/\S*/)[0];
+                        const cleanCode = (typeof code === 'object' && code.text) ? code.text : code;
+                        const langClass = lang ? ` language-${lang}` : '';
+                        return `<pre class="ltr-code-block${langClass}" dir="ltr"><code class="ltr-code" dir="ltr">${cleanCode}</code></pre>`;
+                    };
+
+                    // 2. Force LTR direction and isolation on inline code spans
+                    renderer.codespan = function(code) {
+                        const cleanText = (typeof code === 'object' && code.text) ? code.text : code;
+                        return `<code class="ltr-inline-code" dir="ltr">${cleanText}</code>`;
+                    };
+
+                    // 3. Ensure tables are responsive and wrapped
+                    renderer.table = function(header, body) {
+                        return `<div class="table-responsive" style="overflow-x:auto;"><table class="print-table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+                    };
+
+                    return marked.parse(markdownText, { renderer: renderer });
+                } catch (e) {
+                    console.error('Marked custom parsing error:', e);
+                }
+            }
+            // Fallback converter if marked is not loaded
+            let lines = (markdownText || '').split('\n');
+            let out = [];
+            let inList = false;
+            let inCode = false;
+            let codeLines = [];
+            let codeLang = '';
+
+            for (let i = 0; i < lines.length; i++) {
+                let l = lines[i];
+                let s = l.trim();
+
+                if (s.startsWith('```')) {
+                    if (!inCode) {
+                        inCode = true;
+                        codeLang = s.slice(3).trim();
+                        codeLines = [];
+                        continue;
+                    } else {
+                        inCode = false;
+                        let codeContent = codeLines.join('\n');
+                        out.push(`<pre class="ltr-code-block language-${codeLang}" dir="ltr"><code class="ltr-code" dir="ltr">${codeContent}</code></pre>`);
+                        codeLines = [];
+                        continue;
+                    }
+                }
+
+                if (inCode) {
+                    codeLines.push(l.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+                    continue;
+                }
+
+                if (inList && !s.startsWith('- ')) {
+                    out.push('</ul>');
+                    inList = false;
+                }
+
+                if (s.startsWith('### ')) {
+                    out.push(`<h3>${formatInline(s.slice(4))}</h3>`);
+                } else if (s.startsWith('## ')) {
+                    out.push(`<h2>${formatInline(s.slice(3))}</h2>`);
+                } else if (s.startsWith('# ')) {
+                    out.push(`<h1>${formatInline(s.slice(2))}</h1>`);
+                } else if (s.startsWith('> ')) {
+                    out.push(`<blockquote>${formatInline(s.slice(2))}</blockquote>`);
+                } else if (s.startsWith('- ')) {
+                    if (!inList) {
+                        out.push('<ul>');
+                        inList = true;
+                    }
+                    out.push(`<li>${formatInline(s.slice(2))}</li>`);
+                } else if (!s) {
+                    out.push('');
+                } else {
+                    out.push(`<p>${formatInline(s)}</p>`);
+                }
+            }
+            if (inCode) {
+                out.push(`<pre class="ltr-code-block language-${codeLang}" dir="ltr"><code class="ltr-code" dir="ltr">${codeLines.join('\n')}</code></pre>`);
+            }
+            if (inList) out.push('</ul>');
+
+            function formatInline(str) {
+                return str
+                    .replace(/`([^`]+)`/g, '<code class="ltr-inline-code" dir="ltr">$1</code>')
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            }
+
+            return out.join('\n');
+        }
+
+        async function fetchAiReport(forceRefresh = false, requestedType = null) {
+            const targetType = (requestedType === 'technical' || requestedType === 'executive') 
+                ? requestedType 
+                : currentReportType;
+            currentReportType = targetType;
+            updateReportHeaderUI(targetType);
+
+            // If no scan is selected yet, try to select the first one from history
+            if (!currentScanId) {
+                const select = document.getElementById('scansHistory');
+                if (select.options.length > 1) {
+                    currentScanId = select.options[1].value;
+                    select.value = currentScanId;
+                }
+            }
+
+            if (!currentScanId) {
+                alert('يرجى اختيار أو إطلاق فحص أمني أولاً لتحليله بالذكاء الاصطناعي.');
+                return;
+            }
+
+            const loadingBox = document.getElementById('aiLoadingBox');
+            const emptyBox = document.getElementById('aiEmptyBox');
+            const reportView = document.getElementById('aiReportView');
+            const modelBadge = document.getElementById('aiModelBadge');
+            const loadingTitle = document.getElementById('aiLoadingTitle');
+            const loadingSubtitle = document.getElementById('aiLoadingSubtitle');
+
+            if (targetType === 'technical') {
+                if (loadingTitle) loadingTitle.textContent = 'جاري تحليل الثغرات وصياغة الأكواد التقنية والحلول البرمجية...';
+                if (loadingSubtitle) loadingSubtitle.textContent = 'يقوم Google Gemini بكتابة كتل الأكواد المعزولة (Nginx/Apache/Python/Bash) بدقة هندسية.';
+            } else {
+                if (loadingTitle) loadingTitle.textContent = 'جاري تحليل نتائج الفحص وصياغة التقرير التنفيذي للإدارة العليا...';
+                if (loadingSubtitle) loadingSubtitle.textContent = 'يقوم Google Gemini بحساب مؤشرات المخاطر وتقييم أثر الأعمال والتوصيات الاستراتيجية.';
+            }
+
+            if (emptyBox) emptyBox.style.display = 'none';
+            if (reportView) reportView.style.display = 'none';
+            if (loadingBox) loadingBox.style.display = 'block';
+
+            try {
+                const url = `${API_BASE}/api/scan/${currentScanId}/ai-report?report_type=${targetType}${forceRefresh ? '&refresh=true' : ''}`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (loadingBox) loadingBox.style.display = 'none';
+
+                if (res.ok && data.status === 'success') {
+                    setCachedReport(currentScanId, targetType, data.ai_report_markdown || '', data);
+                    lastAiReportMarkdown = data.ai_report_markdown || '';
+
+                    const cachedLabel = data.cached ? ' [مخزن مؤقتاً ⚡]' : ' [توليد مباشر 🚀]';
+                    if (modelBadge) {
+                        modelBadge.textContent = `🤖 ${data.model_used || 'Gemini Flash'}${cachedLabel}`;
+                    }
+
+                    if (reportView) {
+                        reportView.innerHTML = safeMarkdownRender(lastAiReportMarkdown);
+                        reportView.style.display = 'block';
+                    }
+                } else {
+                    if (reportView) {
+                        reportView.innerHTML = `
+                            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 8px; padding: 1.5rem; color: #fca5a5;">
+                                <h3 style="color: #ef4444; margin-bottom: 8px;">⚠️ تعذر توليد التقرير (${targetType === 'executive' ? 'التنفيذي' : 'التقني'})</h3>
+                                <p>${data.detail || 'حدث خطأ غير متوقع أثناء معالجة الطلب.'}</p>
+                                <button class="scan-btn" onclick="fetchAiReport(true, '${targetType}')" style="margin-top: 1rem; padding: 8px 18px;">
+                                    <span>🔄 إعادة المحاولة</span>
+                                </button>
+                            </div>
+                        `;
+                        reportView.style.display = 'block';
+                    }
+                }
+            } catch (err) {
+                if (loadingBox) loadingBox.style.display = 'none';
+                if (reportView) {
+                    reportView.innerHTML = `
+                        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 8px; padding: 1.5rem; color: #fca5a5;">
+                            <h3 style="color: #ef4444; margin-bottom: 8px;">⚠️ خطأ في الاتصال بالخادم</h3>
+                            <p>${err.message}</p>
+                        </div>
+                    `;
+                    reportView.style.display = 'block';
+                }
+            }
+        }
+
+        function copyAiReportMarkdown() {
+            if (!lastAiReportMarkdown) {
+                alert('لا يوجد تقرير لنسخه بعد!');
+                return;
+            }
+            navigator.clipboard.writeText(lastAiReportMarkdown).then(() => {
+                const btnText = document.getElementById('copyBtnText');
+                const orig = btnText.textContent;
+                btnText.textContent = '✅ تم نسخ التقرير!';
+                setTimeout(() => { btnText.textContent = orig; }, 2000);
+            }).catch(err => {
+                alert('تعذر النسخ التلقائي: ' + err.message);
+            });
+        }
+
+        window.onload = () => {
+
+            if (window.location.protocol === 'file:') {
+                const b = document.getElementById('fileProtocolBanner');
+                if (b) b.style.display = 'block';
+            }
+            loadScansHistory();
+            loadNucleiInfo();
+        };
+    </script>
+</body>
+</html>
