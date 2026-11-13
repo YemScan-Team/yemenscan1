@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unit and integration tests for the httpx stage in YemenScan.
 
 Covers all core requirements and provenance verification:
@@ -40,7 +40,7 @@ import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
@@ -1080,3 +1080,4 @@ class TestHttpxStage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

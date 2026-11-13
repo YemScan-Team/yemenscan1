@@ -1,9 +1,10 @@
+﻿import os
+import sys
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 import os
 import sys
-
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
 import json
 import shutil
 import tempfile
@@ -84,7 +85,7 @@ class TestKiterunnerStage(unittest.TestCase):
 
     def test_04_no_requests_get_probing(self):
         """4. Verify requests.get is not used in stage2_web_probing for API discovery."""
-        stage2_path = os.path.abspath(os.path.join(BASE_DIR, "core", "stage2_web_probing.py"))
+        stage2_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "core", "stage2_web_probing.py"))
         with open(stage2_path, "r", encoding="utf-8") as f:
             code = f.read()
         self.assertNotIn("_probe_single_endpoint", code)
@@ -93,7 +94,7 @@ class TestKiterunnerStage(unittest.TestCase):
 
     def test_05_no_common_api_paths_fallback(self):
         """5. Verify static COMMON_API_PATHS list is completely removed."""
-        stage2_path = os.path.abspath(os.path.join(BASE_DIR, "core", "stage2_web_probing.py"))
+        stage2_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "core", "stage2_web_probing.py"))
         with open(stage2_path, "r", encoding="utf-8") as f:
             code = f.read()
         self.assertNotIn("COMMON_API_PATHS", code)
@@ -133,7 +134,7 @@ class TestKiterunnerStage(unittest.TestCase):
         """9. Wordlist routes-small.kite exists and matches expected SHA256 checksum."""
         self.assertEqual(KITERUNNER_WORDLIST_NAME, "routes-small.kite")
         self.assertEqual(KITERUNNER_WORDLIST_SHA256, "2b1bcac8666580c15cc763dd41a2360553439b729b6234679f5f05bdd10cb514")
-        wordlist_path = os.path.abspath(os.path.join(BASE_DIR, "routes-small.kite"))
+        wordlist_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "routes-small.kite"))
         self.assertTrue(os.path.exists(wordlist_path), "routes-small.kite must be present in workspace")
         with open(wordlist_path, "rb") as f:
             computed_sha = hashlib.sha256(f.read()).hexdigest()
@@ -141,7 +142,7 @@ class TestKiterunnerStage(unittest.TestCase):
 
     def test_10_default_x_forwarded_for_eliminated(self):
         """10. Verify patched source code does not include default X-Forwarded-For: 127.0.0.1."""
-        scan_go = os.path.abspath(os.path.join(BASE_DIR, "kiterunner-src", "kiterunner-1.0.2", "cmd", "kiterunner", "cmd", "scan.go"))
+        scan_go = os.path.abspath(os.path.join(os.path.dirname(__file__), "kiterunner-src", "kiterunner-1.0.2", "cmd", "kiterunner", "cmd", "scan.go"))
         if os.path.exists(scan_go):
             with open(scan_go, "r", encoding="utf-8") as f:
                 content = f.read()
@@ -521,7 +522,7 @@ class TestKiterunnerStage(unittest.TestCase):
 
     def test_29_patch_file_exists_and_valid(self):
         """29. Verify patch file exists and cleanly documents the X-Forwarded-For removal."""
-        patch_file = os.path.abspath(os.path.join(BASE_DIR, "patches", "kiterunner-v1.0.2-remove-xff.patch"))
+        patch_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "patches", "kiterunner-v1.0.2-remove-xff.patch"))
         self.assertTrue(os.path.exists(patch_file), "Patch file must exist in patches/")
         with open(patch_file, "r", encoding="utf-8") as f:
             content = f.read()
@@ -616,3 +617,4 @@ class TestKiterunnerStage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

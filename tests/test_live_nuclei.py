@@ -1,12 +1,13 @@
+﻿import os
+import sys
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 import os
 import sys
 import time
 import json
 import shutil
-
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
 
 from core.stage3_vulnerabilities import run_nuclei
 from core.nuclei_template_selector import generate_nuclei_scan_plan
@@ -20,7 +21,7 @@ def main():
     print(f"Target Origin: {target_origin}")
 
     # Create real live test session in scans directory
-    base_scans = os.path.join(BASE_DIR, "scans")
+    base_scans = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scans")
     os.makedirs(base_scans, exist_ok=True)
     session_dir = os.path.join(base_scans, "live_test_adaptive_nuclei")
     if os.path.exists(session_dir):
@@ -105,3 +106,4 @@ def main():
 if __name__ == "__main__":
     ok = main()
     sys.exit(0 if ok else 1)
+

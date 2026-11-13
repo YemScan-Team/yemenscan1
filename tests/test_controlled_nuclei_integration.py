@@ -1,3 +1,8 @@
+﻿import os
+import sys
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 import os
 import sys
 import json
@@ -9,10 +14,6 @@ if sys.platform == "win32":
         sys.stderr.reconfigure(encoding='utf-8', errors='replace')
     except Exception:
         pass
-
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
 
 from core.runner import run_docker_tool
 from core.stage3_vulnerabilities import (
@@ -214,3 +215,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unit and integration tests for the Naabu stage in YemenScan.
 
 Covers all acceptance criteria:
@@ -24,7 +24,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
@@ -445,9 +445,9 @@ class TestNaabuStage(unittest.TestCase):
         self.assertIn("-iv", args)
         self.assertEqual(args[args.index("-iv") + 1], "4")
         self.assertIn("-timeout", args)
-        self.assertEqual(args[args.index("-timeout") + 1], "1s")
+        self.assertEqual(args[args.index("-timeout") + 1], "2s")
         self.assertIn("-retries", args)
-        self.assertEqual(args[args.index("-retries") + 1], "1")
+        self.assertEqual(args[args.index("-retries") + 1], "2")
         self.assertIn("-rate", args)
         self.assertEqual(args[args.index("-rate") + 1], "300")
         self.assertIn("-verify", args)
@@ -597,3 +597,4 @@ class TestNaabuStage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

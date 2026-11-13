@@ -30,5 +30,5 @@
   "preventive_load_controls": true,
   "circuit_breaker_telemetry": "requires_upstream_proxy",
   "status": "completed",
-  "execution_duration_seconds": 7.05
+  "execution_duration_seconds": 3.66
 }

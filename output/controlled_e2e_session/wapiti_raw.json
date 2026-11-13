@@ -192,7 +192,7 @@
   "anomalies": {},
   "infos": {
     "target": "http://host.docker.internal:8888/",
-    "date": "Tue, 10 Nov 2026 22:11:52 +0000",
+    "date": "Thu, 05 Nov 2026 20:22:35 +0000",
     "version": "Wapiti 3.3.2",
     "scope": "folder",
     "auth": null,

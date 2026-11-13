@@ -1,3 +1,8 @@
+﻿import os
+import sys
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 import os
 import sys
 import json
@@ -10,17 +15,13 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
-
 from core.stage2_web_probing import run_kiterunner_or_api_probing
 
 def run_live_test():
-    session_dir = os.path.join(BASE_DIR, "output", "live_kiterunner_test")
+    session_dir = os.path.abspath("output/live_kiterunner_test")
     os.makedirs(session_dir, exist_ok=True)
     target_url = "https://academy.hackthebox.com"
-    test_wordlist = os.path.join(BASE_DIR, "tests", "fixtures", "routes-test.kite")
+    test_wordlist = os.path.abspath(os.path.join(os.path.dirname(__file__), "fixtures", "routes-test.kite"))
 
     print(f"[*] Starting limited live test against {target_url}...")
     success, candidates = run_kiterunner_or_api_probing(
@@ -72,3 +73,4 @@ def run_live_test():
 
 if __name__ == "__main__":
     run_live_test()
+

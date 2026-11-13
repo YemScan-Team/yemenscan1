@@ -106,33 +106,36 @@ def run_subfinder(domain: str, session_dir: str, scan_id: str) -> Tuple[bool, Li
         log_message=f"بدء استكشاف النطاقات الفرعية السلبي للنطاق: {clean_domain} (Subfinder)..."
     )
 
-    raw_file = os.path.join(session_dir, "subfinder_raw.txt")
+    raw_file = os.path.join(session_dir, "subfinder_raw.jsonl")
+    old_raw_txt = os.path.join(session_dir, "subfinder_raw.txt")
     subdomains_file = os.path.join(session_dir, "subdomains.txt")
     meta_file = os.path.join(session_dir, "subfinder_metadata.json")
 
     # Clean slate: ensure previous scan files are not reused
-    for old_file in (raw_file, subdomains_file, meta_file):
+    for old_file in (raw_file, old_raw_txt, subdomains_file, meta_file):
         if os.path.exists(old_file):
             try:
                 os.remove(old_file)
             except Exception:
                 pass
 
-    # Run Subfinder with strict passive enumeration flags
+    # Run Subfinder with comprehensive enumeration flags
     args = [
         "-d", clean_domain,
+        "-all",
         "-silent",
         "-duc",
         "-timeout", "15",
-        "-max-time", "3",
-        "-o", "/data/subfinder_raw.txt"
+        "-max-time", "5",
+        "-json",
+        "-o", "/data/subfinder_raw.jsonl"
     ]
 
     ok, output = run_docker_tool(
         image="projectdiscovery/subfinder:v2.17.0",
         args=args,
         volume_dir=session_dir,
-        timeout=210,
+        timeout=330,
         scan_id=scan_id
     )
 
@@ -164,20 +167,21 @@ def run_subfinder(domain: str, session_dir: str, scan_id: str) -> Tuple[bool, Li
         return False, []
 
     # Ensure raw output file exists as evidence
-    if not os.path.exists(raw_file):
-        with open(raw_file, "w", encoding="utf-8") as f:
+    target_raw = raw_file if os.path.exists(raw_file) else (old_raw_txt if os.path.exists(old_raw_txt) else raw_file)
+    if not os.path.exists(target_raw):
+        with open(target_raw, "w", encoding="utf-8") as f:
             if output and output.strip():
                 f.write(output.strip() + "\n")
             else:
                 f.write("")
-    elif os.path.getsize(raw_file) == 0 and output and output.strip():
-        with open(raw_file, "w", encoding="utf-8") as f:
+    elif os.path.getsize(target_raw) == 0 and output and output.strip():
+        with open(target_raw, "w", encoding="utf-8") as f:
             f.write(output.strip() + "\n")
 
     # Read and process raw tool output
     raw_lines: List[str] = []
-    if os.path.exists(raw_file):
-        with open(raw_file, "r", encoding="utf-8", errors="replace") as f:
+    if os.path.exists(target_raw):
+        with open(target_raw, "r", encoding="utf-8", errors="replace") as f:
             raw_lines = [line.strip() for line in f if line.strip()]
 
     raw_count = len(raw_lines)
@@ -187,7 +191,14 @@ def run_subfinder(domain: str, session_dir: str, scan_id: str) -> Tuple[bool, Li
     duplicate_count = 0
 
     for line in raw_lines:
-        norm = normalize_and_validate_subdomain(line, clean_domain)
+        candidate_host = line
+        if line.startswith("{"):
+            try:
+                data = json.loads(line)
+                candidate_host = data.get("host") or line
+            except Exception:
+                candidate_host = line
+        norm = normalize_and_validate_subdomain(candidate_host, clean_domain)
         if not norm:
             invalid_count += 1
             continue
@@ -240,8 +251,8 @@ def run_subfinder(domain: str, session_dir: str, scan_id: str) -> Tuple[bool, Li
 
     return True, valid_subdomains
 
-NAABU_PORTS = "80,443,8080,8443,8000,8081,8888,9000,3000,5000,7001,9090"
-SCANNED_PORTS = [80, 443, 8080, 8443, 8000, 8081, 8888, 9000, 3000, 5000, 7001, 9090]
+NAABU_PORTS = "80,81,82,443,444,2082,2083,2086,2087,3000,3001,4000,4200,4433,5000,5001,7001,8000,8008,8080,8081,8082,8083,8090,8181,8443,8500,8834,8888,9000,9090,9200,9443,10000"
+SCANNED_PORTS = [80, 81, 82, 443, 444, 2082, 2083, 2086, 2087, 3000, 3001, 4000, 4200, 4433, 5000, 5001, 7001, 8000, 8008, 8080, 8081, 8082, 8083, 8090, 8181, 8443, 8500, 8834, 8888, 9000, 9090, 9200, 9443, 10000]
 
 def normalize_target_host(target: str) -> Optional[str]:
     """
@@ -361,8 +372,8 @@ def run_naabu(subdomains: List[str], session_dir: str, scan_id: str) -> Tuple[bo
         "-s", "c",
         "-duc",
         "-iv", "4",
-        "-timeout", "1s",
-        "-retries", "1",
+        "-timeout", "2s",
+        "-retries", "2",
         "-rate", "300",
         "-verify",
         "-json",

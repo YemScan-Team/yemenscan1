@@ -1,3 +1,8 @@
+﻿import os
+import sys
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 import os
 import sys
 
@@ -8,10 +13,6 @@ if sys.platform == "win32":
         sys.stderr.reconfigure(encoding='utf-8', errors='replace')
     except Exception:
         pass
-
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
 
 import json
 import time
@@ -93,9 +94,9 @@ def run_integration_test():
     server_thread.start()
     print(f"[+] Mock HTTP Server started on 0.0.0.0:{port}")
 
-    session_dir = os.path.join(BASE_DIR, "output", "test_local_integration")
+    session_dir = os.path.abspath("output/test_local_integration")
     os.makedirs(session_dir, exist_ok=True)
-    test_wordlist = os.path.join(BASE_DIR, "tests", "fixtures", "routes-test.kite")
+    test_wordlist = os.path.abspath(os.path.join(os.path.dirname(__file__), "fixtures", "routes-test.kite"))
     target_url = f"http://host.docker.internal:{port}"
 
     print(f"[+] Running Kiterunner integration test against {target_url} with {test_wordlist}...")
@@ -172,3 +173,4 @@ def run_integration_test():
 
 if __name__ == "__main__":
     sys.exit(run_integration_test())
+

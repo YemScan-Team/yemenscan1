@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unit and integration tests for the Subfinder stage in YemenScan.
 
 Covers all acceptance criteria:
@@ -28,7 +28,7 @@ import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
@@ -506,18 +506,21 @@ class TestSubfinderInvariantsAndConfiguration(unittest.TestCase):
         self.assertNotEqual(image, "projectdiscovery/subfinder:latest", "Must use a pinned release tag instead of :latest!")
         self.assertEqual(image, "projectdiscovery/subfinder:v2.17.0")
 
-        # 2. Timeout must exceed 180s (-max-time 3)
-        self.assertGreaterEqual(timeout, 210, "Docker timeout must be at least 210s to allow 3-minute max-time + buffer!")
+        # 2. Timeout must exceed 300s (-max-time 5)
+        self.assertGreaterEqual(timeout, 330, "Docker timeout must be at least 330s to allow 5-minute max-time + buffer!")
 
-        # 3. CLI arguments must retain -timeout 15 and -max-time 3
+        # 3. CLI arguments must retain -all, -json, -timeout 15 and -max-time 5
+        self.assertIn("-all", args)
+        self.assertIn("-json", args)
         self.assertIn("-timeout", args)
         idx_timeout = args.index("-timeout")
         self.assertEqual(args[idx_timeout + 1], "15")
 
         self.assertIn("-max-time", args)
         idx_maxtime = args.index("-max-time")
-        self.assertEqual(args[idx_maxtime + 1], "3")
+        self.assertEqual(args[idx_maxtime + 1], "5")
 
 
 if __name__ == "__main__":
     unittest.main()
+
