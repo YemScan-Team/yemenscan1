@@ -4,7 +4,8 @@ import re
 from typing import Optional, List, Dict, Any
 from urllib.parse import urlparse
 from fastapi import FastAPI, BackgroundTasks, HTTPException, Query, Depends
-from fastapi.responses import HTMLResponse, FileResponse, Response, RedirectResponse
+from fastapi.responses import HTMLResponse, FileResponse, Response
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -90,6 +91,10 @@ app.add_middleware(
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+os.makedirs(STATIC_DIR, exist_ok=True)
+os.makedirs(TEMPLATES_DIR, exist_ok=True)
 
 class ScanRequest(BaseModel):
     domain: Optional[str] = None
@@ -110,10 +115,14 @@ def sanitize_domain(v: str, check_dns: bool = True) -> str:
     except TargetValidationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
-@app.get("/", include_in_schema=False)
-def root():
-    """Redirects root URL directly to the interactive Swagger API documentation."""
-    return RedirectResponse(url="/docs")
+@app.get("/", response_class=HTMLResponse)
+def read_dashboard():
+    """Serves the interactive YemenScan Security Dashboard."""
+    index_file = os.path.join(TEMPLATES_DIR, "index.html")
+    if os.path.exists(index_file):
+        with open(index_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    return HTMLResponse("<h1>مرحباً بك في YemenScan</h1><p>جاري تجهيز لوحة التحكم...</p>")
 
 @app.on_event("startup")
 def on_startup():
