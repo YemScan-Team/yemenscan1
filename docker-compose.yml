@@ -25,9 +25,13 @@ services:
       - DATABASE_URL=postgresql://yemenscan_user:yemenscan_secure_password123@db:5432/yemenscan_db
       - GEMINI_API_KEY=AQ.Ab8RN6LIIf8hFT0LClX813K73P-xubA1a2Riy4D90jSK2zDPrA
       - PREFER_LOCAL_TOOLS=true
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./scans:/app/scans
       - ./nuclei_templates:/app/nuclei_templates
+      - ./templates:/app/templates
+      - ./main.py:/app/main.py
+      - ./core:/app/core
     depends_on:
       - db
 

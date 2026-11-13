@@ -76,10 +76,40 @@ try:
 except ImportError:
     genai = None
 
+from core.execution_engine import (
+    run_stage1_pipeline,
+    run_stage2_pipeline,
+    run_stage3_pipeline,
+    run_tool_in_session,
+    run_standalone_subfinder,
+    run_standalone_naabu,
+    run_standalone_httpx,
+    run_standalone_kiterunner,
+    run_standalone_nuclei,
+    run_standalone_wapiti,
+    get_tools_readiness_status,
+)
+
+tags_metadata = [
+    {
+        "name": "1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)",
+        "description": "إدارة دورة حياة الفحص الشامل التلقائي، وتشغيل مراحله الثلاث، أو تشغيل أداة محددة داخل جلسة الفحص."
+    },
+    {
+        "name": "2. نتائج واستخراج الأصول والثغرات (Findings & Assets)",
+        "description": "استخراج وتصفية نتائج الفحص من أصول مكتشفة (نطاقات، منافذ، روابط، APIs) وقائمة الثغرات الأمنية."
+    },
+    {
+        "name": "3. فحص الأدوات المستقلة (Independent Security Tools)",
+        "description": "تشغيل كل أداة أمنية من الأدوات الست بشكل منفصل على هدف مخصص لاختبار النتائج بشكل فوري."
+    }
+]
+
 app = FastAPI(
     title="YemenScan - منظومة الفحص الأمني السحابي",
     description="منصة آلية لإدارة سطح الهجوم وفحص واجهات برمجة التطبيقات وثغرات الويب وفق معايير OWASP و CVE",
-    version="2.0.0"
+    version="2.0.0",
+    openapi_tags=tags_metadata
 )
 
 app.add_middleware(
@@ -99,6 +129,34 @@ os.makedirs(TEMPLATES_DIR, exist_ok=True)
 class ScanRequest(BaseModel):
     domain: Optional[str] = None
     target: Optional[str] = None
+
+class Stage1RunRequest(BaseModel):
+    domain: Optional[str] = None
+
+class SessionToolRunRequest(BaseModel):
+    options: Optional[Dict[str, Any]] = None
+
+class StandaloneSubfinderReq(BaseModel):
+    domain: str
+
+class StandaloneNaabuReq(BaseModel):
+    target: str
+    ports: Optional[str] = None
+
+class StandaloneHttpxReq(BaseModel):
+    targets: List[str]
+
+class StandaloneKiterunnerReq(BaseModel):
+    target_url: str
+
+class StandaloneNucleiReq(BaseModel):
+    target_url: str
+    severity: Optional[str] = "medium,high,critical"
+    category: Optional[str] = None
+
+class StandaloneWapitiReq(BaseModel):
+    target_url: str
+    modules: Optional[str] = None
 
 class NucleiScanRequest(BaseModel):
     target: str
@@ -160,8 +218,7 @@ class TargetValidationRequest(BaseModel):
     target: Optional[str] = None
 
 
-@app.post("/api/target/validate")
-@app.get("/api/target/validate")
+@app.post("/api/target/validate", include_in_schema=False)
 def validate_target_endpoint(
     domain: Optional[str] = Query(None),
     target: Optional[str] = Query(None),
@@ -220,7 +277,26 @@ def validate_target_endpoint(
         }
 
 
-@app.post("/api/scan/start")
+@app.get("/api/health", include_in_schema=False)
+def get_system_health(db: Session = Depends(get_db)):
+    """فحص سلامة النظام والاتصال بقاعدة البيانات PostgreSQL."""
+    db_ok = False
+    try:
+        from sqlalchemy import text
+        db.execute(text("SELECT 1"))
+        db_ok = True
+    except Exception:
+        db_ok = False
+
+    return {
+        "status": "healthy" if db_ok else "degraded",
+        "database": "connected" if db_ok else "disconnected",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@app.post("/api/scans/start", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+@app.post("/api/scan/start", include_in_schema=False)
 def start_scan(
     background_tasks: BackgroundTasks,
     domain: Optional[str] = Query(None),
@@ -279,8 +355,10 @@ def start_scan(
         ]
     }
 
-@app.post("/api/scan/{scan_id}/stop")
-@app.post("/api/scan/stop")
+
+@app.post("/api/scans/{scan_id}/stop", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+@app.post("/api/scan/{scan_id}/stop", include_in_schema=False)
+@app.post("/api/scan/stop", include_in_schema=False)
 def stop_scan_endpoint(scan_id: Optional[str] = None, db: Session = Depends(get_db)):
     """
     إيقاف عملية الفحص الجارية فوراً وإنهاء كافة العمليات والأدوات والحاويات التابعة لها.
@@ -315,7 +393,111 @@ def stop_scan_endpoint(scan_id: Optional[str] = None, db: Session = Depends(get_
         "message": f"تم إيقاف عملية الفحص '{scan_id}' بنجاح."
     }
 
-@app.get("/api/scans")
+
+@app.delete("/api/scans/{scan_id}", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+def delete_scan_endpoint(scan_id: str, db: Session = Depends(get_db)):
+    """حذف جلسة فحص وكافة بياناتها وأصولها المكتشفة وثغراتها من قاعدة البيانات."""
+    session = db.query(ScanSessions).filter(ScanSessions.scan_id == scan_id).first()
+    if not session:
+        raise HTTPException(status_code=404, detail="جلسة الفحص غير موجودة.")
+
+    db.delete(session)
+    db.commit()
+
+    return {
+        "status": "success",
+        "scan_id": scan_id,
+        "message": f"تم حذف جلسة الفحص '{scan_id}' وكافة بياناتها بنجاح."
+    }
+
+
+@app.post("/api/scans/{scan_id}/stages/stage1", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+def run_stage1_endpoint(
+    scan_id: str,
+    background_tasks: BackgroundTasks,
+    req: Optional[Stage1RunRequest] = None
+):
+    """تشغيل المرحلة الأولى فقط (Subfinder + Naabu) لجلسة الفحص المحددة."""
+    status = get_status(scan_id)
+    if not status:
+        raise HTTPException(status_code=404, detail="جلسة الفحص غير موجودة.")
+
+    domain = (req.domain if req and req.domain else None) or status.get("target_domain")
+    if not domain:
+        raise HTTPException(status_code=400, detail="يرجى إرسال النطاق المستهدف للمرحلة الأولى.")
+
+    background_tasks.add_task(run_stage1_pipeline, scan_id, domain)
+    return {
+        "status": "started",
+        "scan_id": scan_id,
+        "stage": "stage1_discovery",
+        "target_domain": domain,
+        "message": "بدأ تنفيذ المرحلة الأولى (الاستكشاف وفحص المنافذ) في الخلفية."
+    }
+
+
+@app.post("/api/scans/{scan_id}/stages/stage2", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+def run_stage2_endpoint(scan_id: str, background_tasks: BackgroundTasks):
+    """تشغيل المرحلة الثانية فقط (HTTPX + Kiterunner) لجلسة الفحص المحددة."""
+    status = get_status(scan_id)
+    if not status:
+        raise HTTPException(status_code=404, detail="جلسة الفحص غير موجودة.")
+
+    background_tasks.add_task(run_stage2_pipeline, scan_id)
+    return {
+        "status": "started",
+        "scan_id": scan_id,
+        "stage": "stage2_web_probing",
+        "message": "بدأ تنفيذ المرحلة الثانية (فحص خدمات الويب واستكشاف APIs) في الخلفية."
+    }
+
+
+@app.post("/api/scans/{scan_id}/stages/stage3", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+def run_stage3_endpoint(scan_id: str, background_tasks: BackgroundTasks):
+    """تشغيل المرحلة الثالثة فقط (Nuclei + Wapiti) لجلسة الفحص المحددة."""
+    status = get_status(scan_id)
+    if not status:
+        raise HTTPException(status_code=404, detail="جلسة الفحص غير موجودة.")
+
+    background_tasks.add_task(run_stage3_pipeline, scan_id)
+    return {
+        "status": "started",
+        "scan_id": scan_id,
+        "stage": "stage3_vulnerabilities",
+        "message": "بدأ تنفيذ المرحلة الثالثة (فحص الثغرات الأمنية المتكامل) في الخلفية."
+    }
+
+
+@app.post("/api/scans/{scan_id}/tools/{tool_name}", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+def run_session_tool_endpoint(
+    scan_id: str,
+    tool_name: str,
+    background_tasks: BackgroundTasks,
+    req: Optional[SessionToolRunRequest] = None
+):
+    """تشغيل أداة محددة داخل جلسة الفحص (subfinder, naabu, httpx, kiterunner, nuclei, wapiti)."""
+    status = get_status(scan_id)
+    if not status:
+        raise HTTPException(status_code=404, detail="جلسة الفحص غير موجودة.")
+
+    valid_tools = ["subfinder", "naabu", "httpx", "kiterunner", "nuclei", "wapiti"]
+    if tool_name.lower() not in valid_tools:
+        raise HTTPException(
+            status_code=400,
+            detail=f"الأداة غير معروفة: '{tool_name}'. الأدوات المتاحة هي: {', '.join(valid_tools)}"
+        )
+
+    opts = req.options if req else {}
+    background_tasks.add_task(run_tool_in_session, scan_id, tool_name.lower(), opts)
+    return {
+        "status": "started",
+        "scan_id": scan_id,
+        "tool": tool_name.lower(),
+        "message": f"بدأ تشغيل الأداة '{tool_name}' داخل جلسة الفحص في الخلفية."
+    }
+
+
+@app.get("/api/scans", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
 def get_all_scans(db: Session = Depends(get_db)):
     """Returns a list of all historical scan sessions from database."""
     scans_list = []
@@ -390,8 +572,9 @@ def get_all_scans(db: Session = Depends(get_db)):
         "scans": scans_list
     }
 
-@app.get("/api/scan/status")
-@app.get("/api/scan/{scan_id}/status")
+@app.get("/api/scans/{scan_id}/status", tags=["1. خط الفحص المتسلسل ومراحله (Sequential Pipeline & Stages)"])
+@app.get("/api/scan/{scan_id}/status", include_in_schema=False)
+@app.get("/api/scan/status", include_in_schema=False)
 def get_scan_status(scan_id: Optional[str] = None, db: Session = Depends(get_db)):
     """Retrieves real-time execution progress, current tool, and metrics."""
     if not scan_id:
@@ -444,8 +627,9 @@ def get_scan_status(scan_id: Optional[str] = None, db: Session = Depends(get_db)
         "data": status
     }
 
-@app.get("/api/scan/results")
-@app.get("/api/scan/{scan_id}/results")
+@app.get("/api/scans/{scan_id}/results", tags=["2. نتائج واستخراج الأصول والثغرات (Findings & Assets)"])
+@app.get("/api/scan/{scan_id}/results", include_in_schema=False)
+@app.get("/api/scan/results", include_in_schema=False)
 def get_scan_results(scan_id: Optional[str] = None):
     """
     Returns live web URLs (HTTPX) isolated strictly by scan session.
@@ -498,8 +682,9 @@ def get_scan_results(scan_id: Optional[str] = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"خطأ أثناء قراءة النتائج: {str(e)}")
 
-@app.get("/api/scan/vulnerabilities")
-@app.get("/api/scan/{scan_id}/vulnerabilities")
+@app.get("/api/scans/{scan_id}/vulnerabilities", tags=["2. نتائج واستخراج الأصول والثغرات (Findings & Assets)"])
+@app.get("/api/scan/{scan_id}/vulnerabilities", include_in_schema=False)
+@app.get("/api/scan/vulnerabilities", include_in_schema=False)
 def get_vulnerabilities(scan_id: Optional[str] = None, db: Session = Depends(get_db)):
     """
     Unified Vulnerability Findings (Nuclei + Wapiti) queried from VulnerabilityFindings
@@ -624,7 +809,8 @@ def get_vulnerabilities(scan_id: Optional[str] = None, db: Session = Depends(get
         "data": results
     }
 
-@app.get("/api/scan/{scan_id}/discovery")
+@app.get("/api/scans/{scan_id}/discovery", tags=["2. نتائج واستخراج الأصول والثغرات (Findings & Assets)"])
+@app.get("/api/scan/{scan_id}/discovery", include_in_schema=False)
 def get_discovery_results(scan_id: str, db: Session = Depends(get_db)):
     """Phase 1 results: Subdomains and Open Ports queried directly from Assets table."""
     subdomains = []
@@ -680,7 +866,8 @@ def get_discovery_results(scan_id: str, db: Session = Depends(get_db)):
         "open_ports": ports
     }
 
-@app.get("/api/scan/{scan_id}/endpoints")
+@app.get("/api/scans/{scan_id}/endpoints", tags=["2. نتائج واستخراج الأصول والثغرات (Findings & Assets)"])
+@app.get("/api/scan/{scan_id}/endpoints", include_in_schema=False)
 def get_endpoints_results(scan_id: str, db: Session = Depends(get_db)):
     """Phase 2 results: Active Web URLs, Tech Stack, and Discovered API Routes from Assets."""
     active_urls = []
@@ -752,7 +939,8 @@ def get_endpoints_results(scan_id: str, db: Session = Depends(get_db)):
         "api_endpoints": api_endpoints
     }
 
-@app.get("/api/scan/{scan_id}/report")
+@app.get("/api/scans/{scan_id}/report", include_in_schema=False)
+@app.get("/api/scan/{scan_id}/report", include_in_schema=False)
 def get_executive_report(scan_id: str, db: Session = Depends(get_db)):
     """Returns a consolidated executive security report for the scan session from DB."""
     status = get_status(scan_id) or {}
@@ -873,7 +1061,7 @@ def get_executive_report(scan_id: str, db: Session = Depends(get_db)):
         "all_vulnerabilities": vulns
     }
 
-@app.get("/api/nuclei/info")
+@app.get("/api/nuclei/info", include_in_schema=False)
 def get_nuclei_info():
     """Returns Nuclei engine status and installed templates breakdown."""
     from core.runner import is_docker_available
@@ -894,7 +1082,7 @@ def get_nuclei_info():
         "templates": templates
     }
 
-@app.post("/api/vulnerabilities/normalize")
+@app.post("/api/vulnerabilities/normalize", include_in_schema=False)
 def normalize_vulnerability_endpoint(vuln_payload: Dict[str, Any]):
     """
     Enterprise-grade Vulnerability Normalization & Enrichment endpoint.
@@ -931,7 +1119,7 @@ def normalize_vulnerability_endpoint(vuln_payload: Dict[str, Any]):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Normalization failed: {str(e)}")
 
-@app.post("/api/nuclei/scan")
+@app.post("/api/nuclei/scan", include_in_schema=False)
 def scan_nuclei_endpoint(req: NucleiScanRequest):
     """Executes an on-demand targeted Nuclei scan on a URL or endpoint."""
     from core.stage3_vulnerabilities import run_standalone_nuclei
@@ -955,6 +1143,68 @@ def scan_nuclei_endpoint(req: NucleiScanRequest):
         "total_findings": len(findings),
         "findings": findings
     }
+
+
+# =====================================================================
+# 3. Independent Security Tools (فحص الأدوات المستقلة)
+# =====================================================================
+
+@app.post("/api/tools/subfinder", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def run_standalone_subfinder_endpoint(req: StandaloneSubfinderReq):
+    """تشغيل Subfinder المستقل لاكتشاف النطاقات الفرعية لنطاق محدد."""
+    if not req.domain or len(req.domain.strip()) < 3:
+        raise HTTPException(status_code=400, detail="يرجى إدخال نطاق صالح للبحث عن نطاقاته الفرعية.")
+    try:
+        clean_domain, _ = validate_target_domain(req.domain, check_dns=False)
+    except Exception:
+        clean_domain = req.domain.strip()
+    return run_standalone_subfinder(clean_domain)
+
+
+@app.post("/api/tools/naabu", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def run_standalone_naabu_endpoint(req: StandaloneNaabuReq):
+    """تشغيل Naabu المستقل لفحص المنافذ المفتوحة لنطاق أو عنوان IP محدد."""
+    if not req.target or len(req.target.strip()) < 3:
+        raise HTTPException(status_code=400, detail="يرجى إدخال هدف صالح لفحص المنافذ.")
+    return run_standalone_naabu(req.target, req.ports)
+
+
+@app.post("/api/tools/httpx", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def run_standalone_httpx_endpoint(req: StandaloneHttpxReq):
+    """تشغيل HTTPX المستقل للتحقق من خدمات الويب النشطة وبصمات التقنيات."""
+    if not req.targets:
+        raise HTTPException(status_code=400, detail="يرجى إرسال قائمة بالأهداف (نطاقات أو عناوين IP أو روابط).")
+    return run_standalone_httpx(req.targets)
+
+
+@app.post("/api/tools/kiterunner", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def run_standalone_kiterunner_endpoint(req: StandaloneKiterunnerReq):
+    """تشغيل Kiterunner المستقل لاكتشاف مسارات APIs و Endpoints الحساسة."""
+    if not req.target_url or not req.target_url.strip().startswith("http"):
+        raise HTTPException(status_code=400, detail="يرجى إدخال رابط ويب يبدأ بـ http:// أو https://")
+    return run_standalone_kiterunner(req.target_url)
+
+
+@app.post("/api/tools/nuclei", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def run_standalone_nuclei_endpoint(req: StandaloneNucleiReq):
+    """تشغيل Nuclei المستقل لفحص الثغرات وفق قوالب محددة ودرجات الخطورة."""
+    if not req.target_url or not req.target_url.strip().startswith("http"):
+        raise HTTPException(status_code=400, detail="يرجى إدخال رابط ويب يبدأ بـ http:// أو https://")
+    return run_standalone_nuclei(req.target_url, severity=req.severity)
+
+
+@app.post("/api/tools/wapiti", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def run_standalone_wapiti_endpoint(req: StandaloneWapitiReq):
+    """تشغيل Wapiti المستقل للفحص الديناميكي للثغرات الحركية (DAST)."""
+    if not req.target_url or not req.target_url.strip().startswith("http"):
+        raise HTTPException(status_code=400, detail="يرجى إدخال رابط ويب يبدأ بـ http:// أو https://")
+    return run_standalone_wapiti(req.target_url, modules=req.modules)
+
+
+@app.get("/api/tools/status", tags=["3. فحص الأدوات المستقلة (Independent Security Tools)"])
+def get_tools_status_endpoint():
+    """التحقق من جاهزية وحالة الحاويات الست والأدوات في النظام."""
+    return get_tools_readiness_status()
 # =====================================================================
 # Strict System Prompts and Post-Processing Sanitizers for AI Reports
 # =====================================================================
@@ -1733,7 +1983,8 @@ def build_standalone_html(report_md: str, scan_id: str, r_type: str, status: dic
 </html>"""
     return html
 
-@app.get("/api/scan/{scan_id}/ai-report")
+@app.get("/api/scans/{scan_id}/ai-report", include_in_schema=False)
+@app.get("/api/scan/{scan_id}/ai-report", include_in_schema=False)
 def generate_ai_report(
     scan_id: str, 
     refresh: bool = Query(False),
@@ -2046,7 +2297,8 @@ def generate_ai_report(
         if close_db_after:
             db.close()
 
-@app.get("/api/scan/{scan_id}/export/markdown")
+@app.get("/api/scans/{scan_id}/export/markdown", include_in_schema=False)
+@app.get("/api/scan/{scan_id}/export/markdown", include_in_schema=False)
 def export_scan_markdown(
     scan_id: str,
     report_type: str = Query("executive", description="'executive' or 'technical'"),
@@ -2092,7 +2344,8 @@ def export_scan_markdown(
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
-@app.get("/api/scan/{scan_id}/export/html")
+@app.get("/api/scans/{scan_id}/export/html", include_in_schema=False)
+@app.get("/api/scan/{scan_id}/export/html", include_in_schema=False)
 def export_scan_html(
     scan_id: str,
     report_type: str = Query("executive", description="'executive' or 'technical'"),
@@ -2139,7 +2392,8 @@ def export_scan_html(
         headers={"Content-Disposition": f'inline; filename="{filename}"'}
     )
 
-@app.get("/api/scan/{scan_id}/export/json")
+@app.get("/api/scans/{scan_id}/export/json", include_in_schema=False)
+@app.get("/api/scan/{scan_id}/export/json", include_in_schema=False)
 def export_scan_json(
     scan_id: str,
     report_type: Optional[str] = Query(None, description="Optional filter: 'executive' or 'technical'"),
